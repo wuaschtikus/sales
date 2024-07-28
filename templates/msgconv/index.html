@@ -1,0 +1,53 @@
+{% extends 'msgconv/base.html' %}
+{% block content %}
+
+    <div class="box m-6 pb-6">
+        <h1>Upload a File</h1>
+        <form id="upload-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="field">
+                <label class="label">Convert single .msg file to .eml</label>
+                <div class="control">
+                    
+                </div>
+            </div>
+            <div class="file has-name is-fullwidth">
+                <label class="file-label">
+                    <input class="file-input" type="file" name="file" id="file-input"/>
+                    <span class="file-cta">
+                        <span class="file-icon">
+                            <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label"> Choose a file… </span>
+                    </span>
+                    <span class="file-name" id="file-name">
+                        {% if file_name %}
+                            {{ file_name }}
+                        {% else %}
+                            No file selected
+                        {% endif %}
+                    </span>
+                </label>
+            </div>
+            <button type="submit" class="button is-primary">Upload</button>
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const fileInput = document.querySelector('#file-input');
+                const fileName = document.querySelector('#file-name');
+                const form = document.querySelector('#upload-form');
+
+                fileInput.addEventListener('change', () => {
+                    if (fileInput.files.length > 0) {
+                        fileName.textContent = fileInput.files[0].name;
+                        //form.submit();  // Automatically submit the form when a file is selected
+                    }
+                });
+            });
+        </script>
+        </div>
+    </div>
+
+    {% endblock %}
+

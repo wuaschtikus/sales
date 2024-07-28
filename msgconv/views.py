@@ -8,7 +8,7 @@ class LandingView(View):
     template_name = 'index.html'
     def get(self, request):
         form = MyFileUploadForm()
-        return render(request, 'index.html', {'form': form})
+        return render(request, 'msgconv/index.html', {'form': form})
 
     def post(self, request):
         form = MyFileUploadForm(request.POST, request.FILES)
