@@ -8,6 +8,9 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
+
+Allauth integration
+https://python.plainenglish.io/proper-way-of-using-google-authentication-with-django-and-django-allauth-part-2-c47b87dd1283
 """
 
 import os
@@ -23,7 +26,6 @@ GOOGLE_AUTH_CLIENT_KEY=os.getenv('GOOGLE_AUTH_CLIENT_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -47,11 +49,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'msgconv',
+    'crispy_forms',
     # required by allauth
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    # required for allauth user sessions 
+    'django.contrib.humanize',
+    'allauth.usersessions',
+    
 ]
 
 MIDDLEWARE = [
@@ -64,6 +71,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # required for allauth
     "allauth.account.middleware.AccountMiddleware",
+    # Optional -- needed when: USERSESSIONS_TRACK_ACTIVITY = True
+    'allauth.usersessions.middleware.UserSessionsMiddleware',
 ]
 
 # Provider specific settings
@@ -91,12 +100,18 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+LOGOUT_REDIRECT_URL = '/'  # Redirect to home page after logout
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
-LOGIN_REDIRECT_URL = 'index'
-ACCOUNT_LOGOUT_URL = 'login'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_URL = '/'
+# Request email address from 3rd party account provider? E.g. using OpenID AX, or the Facebook “email” permission.
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_SESSION_REMEMBER = True
+
 
 ROOT_URLCONF = 'sales.urls'
 
@@ -111,8 +126,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # `allauth` needs this from django
+                # `allauth` requires the follwing 
                 'django.template.context_processors.request',
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -169,8 +185,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIR = [
-    BASE_DIR / 'sales/static'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    '/var/www/static/',
 ]
 
 # Default primary key field type

@@ -5,7 +5,7 @@ from django.views import View
 
 
 class LandingView(View):
-    template_name = 'index.html'
+    template_name = 'msgconv/index.html'
     def get(self, request):
         form = MyFileUploadForm()
         return render(request, 'msgconv/index.html', {'form': form})
@@ -19,5 +19,5 @@ class LandingView(View):
             file_content = uploaded_file.read()  # This reads the file into memory
             # You can then process the file_content as needed
             print(file_content)
-            return render(request, 'index.html', {'file_name': uploaded_file.name})
-        return render(request, 'index.html', {'form': form})
+            return render(request, 'msgconv/index.html', {'file_name': uploaded_file.name})
+        return render(request, 'msgconv/index.html', {'form': form})
