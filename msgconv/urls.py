@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import LandingView
+from .views import MsgConv, IndexView, ConverterView
 
 urlpatterns = [
-    path('', LandingView.as_view(), name='index'),
-    path('upload/', LandingView.as_view(), name='index'),
+    path('', IndexView.as_view(), name='index'),
+    path('converter/', ConverterView.as_view(), name='converter'),
+    path('msgconv/', MsgConv.as_view(), name='msgconv'),
+    path('upload/', MsgConv.as_view(), name='msgupload'),
 ]

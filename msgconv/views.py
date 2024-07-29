@@ -4,11 +4,22 @@ from django.shortcuts import render
 from django.views import View
 
 
-class LandingView(View):
+class IndexView(View):
     template_name = 'msgconv/index.html'
     def get(self, request):
+        return render(request, self.template_name)
+    
+class ConverterView(View):
+    template_name = 'msgconv/converter.html'
+    def get(self, request):
+        return render(request, self.template_name)
+
+class MsgConv(View):
+    template_name = 'msgconv/msgconv.html'
+    
+    def get(self, request):
         form = MyFileUploadForm()
-        return render(request, 'msgconv/index.html', {'form': form})
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request):
         form = MyFileUploadForm(request.POST, request.FILES)
@@ -19,5 +30,5 @@ class LandingView(View):
             file_content = uploaded_file.read()  # This reads the file into memory
             # You can then process the file_content as needed
             print(file_content)
-            return render(request, 'msgconv/index.html', {'file_name': uploaded_file.name})
-        return render(request, 'msgconv/index.html', {'form': form})
+            return render(request, self.template_name, {'file_name': uploaded_file.name})
+        return render(request, self.template_name, {'form': form})

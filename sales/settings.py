@@ -58,8 +58,8 @@ INSTALLED_APPS = [
     # required for allauth user sessions 
     'django.contrib.humanize',
     'allauth.usersessions',
-    
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -100,18 +100,30 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'  # Redirect to home page after logout
 
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-LOGIN_REDIRECT_URL = '/'
+ACCOUNT_PASSWORD_MIN_LENGTH = 8
+ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
+
+SOCIALACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = False
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_LOGIN_ON_GET=True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+#LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_URL = '/'
 # Request email address from 3rd party account provider? E.g. using OpenID AX, or the Facebook “email” permission.
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
-
 
 ROOT_URLCONF = 'sales.urls'
 
