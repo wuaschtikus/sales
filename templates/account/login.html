@@ -10,46 +10,66 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
 </head>
-{% block head_title %}{% trans "Sign Up" %}{% endblock %}
-
 <body>
-    <section class="section">
+
+<section class="section">
     <div class="container">
         <div class="columns is-multiline is-centered">
-        <div class="column is-8 is-5-desktop">
-            <div class="box p-6 has-background-light has-text-centered">
-            <span class="has-text-grey-dark">Sign In</span>
-            <h3 class="mb-5 is-size-4 has-text-weight-bold">Join our community</h3>
-            <form action="#">
-                <div class="field">
-                <div class="control">
-                    <input class="input" type="email" placeholder="E-mail address">
+            <div class="column is-8 is-5-desktop">
+                <div class="box p-6 has-background-light has-text-centered">
+                    <span class="has-text-grey-dark">Sign In</span>
+                    <h3 class="mb-5 is-size-4 has-text-weight-bold">Sign in to use our great tools!</h3>
+                    
+
+                    <form method="post" action="{% url 'account_login' %}">
+                        {% csrf_token %}
+
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" type="email" name="{{ form.login.name }}" id="{{ form.login.id_for_label }}" placeholder="example@gmail.com">
+                                <div class="is-size-7 has-text-left">
+                                    {{ form.email.errors|escape }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" type="{{ form.password.field.widget.input_type }}" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" placeholder="Password">
+                                <div class="is-size-7 has-text-left">
+                                    {{ form.password.errors|escape }}
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <button type="submit" class="button is-primary mb-4 is-fullwidth">Get Started</button>
+                        <a class="button is-primary mb-4 is-fullwidth" href="{% url 'index' %}">Back</button>
+                        <a class="mb-4 is-inline-block" href="#"><small>Forgot password?</small></a>
+                        <a class="mb-4 is-inline-block" href="account_signup"><small>Don't have an account already? Either register here or use any of the provider below.</small></a>
+
+                        <a class="button is-white mb-2 is-flex is-justify-content-center is-align-items-center is-fullwidth" href="{% provider_login_url 'google' %}">
+                            <div class="mr-2">
+                                <i class="fab fa-google"></i>
+                            </div>
+                            <span class="has-text-grey-dark">Sign in with Google</span>
+                        </a>
+
+                        <a class="button is-white mb-2 is-flex is-justify-content-center is-align-items-center is-fullwidth" href="#">
+                            <div class="mr-2">
+                                <i class="fab fa-facebook"></i>
+                            </div>
+                            <span class="has-text-grey-dark">Sign in with Facebook</span>
+                        </a>
+                    </form>
+
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+
                 </div>
-                </div>
-                <div class="field">
-                <div class="control">
-                    <input class="input" type="password1" placeholder="Password">
-                </div>
-                </div>
-                <button type="submit" class="button is-primary mb-4 is-fullwidth">Sign In</button>
-                <a class="button is-primary mb-4 is-fullwidth" href="{% url 'index' %}">Back</button>
-                <a class="mb-4 is-inline-block" href="#"><small>Forgot password?</small></a>
-                <a class="button is-white mb-2 is-flex is-justify-content-center is-align-items-center is-fullwidth" href="{% provider_login_url 'google' %}">
-                <div class="mr-2">
-                <i class="fab fa-google"></i>
-                </div>
-                <span class="has-text-grey-dark">Sign in with Google</span>
-                </a>
-                <a class="button is-white mb-2 is-flex is-justify-content-center is-align-items-center is-fullwidth" href="#">
-                <div class="mr-2">
-                    <i class="fab fa-facebook"></i>
-                </div>
-                <span class="has-text-grey-dark">Sign in with Facebook</span>
-                </a>
-            </form>
             </div>
         </div>
-        </div>
     </div>
-    </section>
+</section> 
+
 </body>
