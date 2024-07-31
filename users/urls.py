@@ -15,21 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from django.views.generic import TemplateView
 from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
 
+from .views import ViewUserProfile
+
 urlpatterns = [
-    path('', include('users.urls')),
-    path('', include('msgconv.urls')),
-    
-    path('admin/', admin.site.urls),
-    path('msgconv/', include('msgconv.urls')),
-    # required by allauth
-    path('accounts/', include('allauth.urls')),
-    path('login/', TemplateView.as_view(template_name='account/login.html'), name='login'),
+    path('profile/', ViewUserProfile.as_view(), name='user-profile')
 ] 
-
-
-

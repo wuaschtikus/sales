@@ -1,6 +1,6 @@
-{% extends 'msgconv/base.html' %}
+{% extends '../base/base.html' %}
 {% block content %}
-
+{% include '../base/snippets/navbar.html' %}
     <div class="box m-6 pb-6">
         <h1>Upload a File</h1>
         <form id="upload-form" method="post" enctype="multipart/form-data">

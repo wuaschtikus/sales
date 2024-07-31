@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'msgconv',
     'crispy_forms',
+    'users',
     # required by allauth
     'allauth',
     'allauth.account',
