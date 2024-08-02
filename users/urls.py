@@ -18,9 +18,11 @@ from django.urls import path, include, re_path
 from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import TemplateView
 
-from .views import ViewUserProfile
+from .views import ProfileView
 
 urlpatterns = [
-    path('profile/', ViewUserProfile.as_view(), name='user-profile')
+    path('profile/', TemplateView.as_view(template_name='account/profile.html'), name='user-profile'),
+    path('accounts/email', ProfileView.as_view(template_name='account/profile.html'), name='user-profile')
 ] 

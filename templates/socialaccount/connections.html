@@ -1,12 +1,78 @@
-{% extends "account/base.html" %}
-
+{% extends "../base/base.html" %}
 {% load i18n %}
-
-{% block head_title %}{% trans "Account Connections" %}{% endblock %}
-
 {% block content %}
+{% include '../base/snippets/navbar.html' %}
 
+<section class="pb-2">
+    <div class="pl-5">
+        <h1 class="title">3rd Party Accounts</h1>
+    </div>
+</section>
 
+<section class="pl-2 pr-2">
+    <div class="box">
+    <form class="w-full lg:max-w-xl" method="post"  action="{% url 'socialaccount_connections' %}">
+    {% csrf_token %}
+        <div class="columns is-multiline">
+            <div class="column is-6-tablet">
+                <fieldset>
+                    {% if form.non_field_errors %}
+                        <div class="p-6 bg-red-500 text-white rounded-xl m-2">
+                            <p class="p-2">{{ form.non_field_errors }}</p>
+                        </div>
+                    {% endif %}
+                    {% for base_account in form.accounts %}
+                    {% with base_account.get_provider_account as account %}
+                    <div>
+                        <label for="id_account_{{ base_account.id }}" class="{% if emailaddress.primary %}primary_email{%endif%}block mb-2 text-sm text-gray-600 dark:text-gray-200">
+                        <input id="id_account_{{ base_account.id }}" type="radio" name="account" value="{{ base_account.id }}"/>     
+                        <span>{{account.get_brand.name}}</span>
+                        -> {{ account }}
+                        </label>
+                    </div>
+                    {% endwith %}
+                    {% endfor %}
+                    <div class="mt-8 md:flex md:items-center">
+                        
+                        <button type="submit" name="action_remove" class="w-full m-2 px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg md:w-1/2 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                            {% trans "Remove" %}
+                        </button>
+                    </div>
+                </fieldset> 
+            </div>
+            
+            <div class="column is-6-tablet">
+                 <input type="hidden" name="account" value="{{ account.pk }}" />
+                <button type="submit" class="btn btn-danger">
+                    {% trans "Disconnect" %}
+                </button>
+            </div>
+            <div class="column is-6-tablet">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Password</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <a href="{% url 'account_reset_password' %}" class="button">Change Password</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+            <div class="column is-6-tablet">
+                <!-- nothing to see here-->
+            </div>
+             
+        </div>
+        </form>
+    </div>
+   
+</section>
+
+{% comment %} 
     <section class="bg-white dark:bg-gray-900">
         <div class="container px-6 py-24 mx-auto lg:py-32">
             <div class="lg:flex">
@@ -68,6 +134,6 @@
             </div>
 
         </div>
-    </section>
+    </section> {% endcomment %}
 {% endblock %}
 

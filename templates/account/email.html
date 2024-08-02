@@ -1,0 +1,100 @@
+{% extends '../base/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load account socialaccount %}
+{% block content %}
+{% include '../base/snippets/navbar.html' %}
+
+<section class="pb-2">
+        <div class="pl-5">
+        <h1 class="title">Add Email</h1>
+    </div>
+</section>
+
+<section class="pl-2 pr-2">
+    <form method="post" action="{%url 'account_email' %}">
+    {% csrf_token %}
+    <div class="box">
+        <div class="columns is-multiline">
+            <div class="column is-6-tablet">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Email</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" placeholder="example@gmail.com">
+                                <div class="is-size-7 has-text-left">
+                                    {{ form.email.errors|escape }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-6-tablet">
+                <button type="submit" name="action_add" class="button is-primary mb-4">Add Mail</button>
+            </div>
+            <div class="column is-6-tablet">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Primary Email</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" value="{{ user.email }}" disabled>
+                                <div class="pt-2 is-size-7 has-text-left">
+                                    {% if email_verified %}
+                                        <p>Your email is verified.</p>
+                                    {% else %}
+                                        <p>Your email is not verified.</p>
+                                    {% endif %}
+                                    {{ form.email.errors|escape }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-6-tablet">
+                <button name="action_primary" type="submit" class="button mb-4">Make Primary</button>
+                <button name="action_send" type="submit" class="button mb-4">Re-send Verification </button>
+                <button name="action_remove" type="submit" class="button mb-4">Remove</button>
+            </div>
+            <div class="column is-6-tablet">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Secondary Email</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" value="{{ user.email }}" disabled>
+                                <div class="pt-2 is-size-7 has-text-left">
+                                    {% if email_verified %}
+                                        <p>Your email is verified.</p>
+                                    {% else %}
+                                        <p>Your email is not verified.</p>
+                                    {% endif %}
+                                    {{ form.email.errors|escape }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-6-tablet">
+                 <button name="action_primary" type="submit" class="button mb-4">Make Primary</button>
+                <button name="action_send" type="submit" class="button mb-4">Re-send Verification </button>
+                <button name="action_remove" type="submit" class="button mb-4">Remove</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+{% endblock %}

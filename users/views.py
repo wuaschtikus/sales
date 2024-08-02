@@ -1,22 +1,24 @@
 from django.urls import reverse_lazy
-from django.views.generic.edit import FormView
-from .forms import MyForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+from allauth.account.models import EmailAddress
+from allauth.socialaccount.models import SocialAccount
 
-class ViewUserProfile(LoginRequiredMixin, FormView):
-    template_name = 'account/profile.html'  # Template to render the form
-    form_class = MyForm
-    success_url = reverse_lazy('form_success')  # URL to redirect after successful form submission
 
-    def get_initial(self):
-        initial = super().get_initial()
-        # Prepopulate the email field with the user's email
-        if self.request.user.is_authenticated:
-            initial['email'] = self.request.user.email
-        return initial
+class ProfileView(TemplateView):
+    template_name = 'account/profile.html'
 
-    def form_valid(self, form):
-        # Process the data in form.cleaned_data as required
-        # For example, send an email or save to database
-        print(form.cleaned_data)
-        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        # Get the primary email for the user
+        try:
+            email_address = EmailAddress.objects.get(user=user, primary=True)
+            context['email_verified'] = email_address.verified
+            
+            has_social_account = SocialAccount.objects.filter(user=user).exists()
+            context['has_social_account'] = has_social_account
+        except EmailAddress.DoesNotExist:
+            context['email_verified'] = False  
+        
+        return context
