@@ -12,10 +12,8 @@
                     <span class="has-text-grey-dark">Sign In</span>
                     <h3 class="mb-5 is-size-4 has-text-weight-bold">Join our community</h3>
                     
-
                     <form method="post" action="{% url 'account_signup' %}">
                         {% csrf_token %}
-
                         <div class="field">
                             <div class="control">
                                 <input class="input" type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" placeholder="example@gmail.com">
