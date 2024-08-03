@@ -1,0 +1,20 @@
+{% extends '../base/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load account socialaccount %}
+{% block content %}
+
+
+<section class="section">
+    <div class="box">
+        <h2>You are about to use third party authentication!</h2>
+        <form method="post">
+            <div class="">
+                {% csrf_token %}
+                <button type="submit" class="button mt-4">Continue</button>
+            </div>
+        </form>
+    </div>
+</section> 
+
+{% endblock %}
