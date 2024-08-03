@@ -13,7 +13,7 @@
 
 <section class="pl-2 pr-2">
     <div class="box">
-        <table class="table no-borders">
+        <table class="table is-borderless">
             <tbody>
                 {% for emailaddress in user.emailaddress_set.all %}
                 <form method="post" action="{% url 'account_email' %}">
@@ -55,12 +55,16 @@
                         <td>
                             <div class="field">
                                 <div class="control">
+
+                                {% if emailaddress.primary == False %}
                                     <button name="action_primary" type="submit" class="button mb-4">Make Primary</button>
-                                
-                                {% if emailaddress.verified == false %}
+                                {% endif %}
+
+                                {% if emailaddress.verified == False %}
                                     <button name="action_send" type="submit" class="button mb-4">Re-send Verification </button>
                                 {% endif %}
-                                {% if emailaddress.primary == false %}
+
+                                {% if emailaddress.primary == False %}
                                     <button name="action_remove" type="submit" class="button mb-4">Remove</button>
                                 {% endif %}
                                 </div>
@@ -69,6 +73,25 @@
                     </tr>
                 </form>
                 {% endfor %}
+                <form method="post" action="{% url 'account_email' %}">
+                    {% csrf_token %}
+                    <tr>
+                        <td>
+                            <div class="field-label is-normal">
+                                <label class="label">Add Email</label>
+                            </div>
+                        </td>
+                        <td>
+                            <input class="input" type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" placeholder="example@gmail.com">
+                            <div class="is-size-7 has-text-left">
+                                {{ form.email.errors|escape }}
+                            </div>
+                        </td>
+                        <td>
+                            <button name="action_add" type="submit" class="button mb-4">Add</button>
+                        </td>
+                    </tr>
+                </form>
             </tbody>
         </table>
     </div>
