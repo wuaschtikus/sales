@@ -6,95 +6,72 @@
 {% include '../base/snippets/navbar.html' %}
 
 <section class="pb-2">
-        <div class="pl-5">
+    <div class="pl-5">
         <h1 class="title">Add Email</h1>
     </div>
 </section>
 
 <section class="pl-2 pr-2">
-    <form method="post" action="{%url 'account_email' %}">
-    {% csrf_token %}
     <div class="box">
-        <div class="columns is-multiline">
-            <div class="column is-6-tablet">
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">Email</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input class="input" type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" placeholder="example@gmail.com">
-                                <div class="is-size-7 has-text-left">
-                                    {{ form.email.errors|escape }}
+        <table class="table no-borders">
+            <tbody>
+                {% for emailaddress in user.emailaddress_set.all %}
+                <form method="post" action="{% url 'account_email' %}">
+                    {% csrf_token %}
+                    <tr>
+                        <td>
+                            <div class="field-label is-normal">
+                                <label class="label">Email</label>
+                            </div>
+                        </td>
+                        <td style="width: 500px;">
+                            <div class="field">
+                                <div class="field-body">
+                                    <div class="field">
+                                        <div class="control">
+                                            <label for="email_radio_{{forloop.counter}}" class="{% if emailaddress.primary %}primary_email{%endif%}block mb-2 text-sm text-gray-600 dark:text-gray-200">
+                                            {% if emailaddress.primary %}
+                                                <input id="email_radio_{{forloop.counter}}" class="input" type="text" name="email" value="{{ emailaddress.email }}" id="{{ form.email.id_for_label }}" {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{%endif %} disabled/>     
+                                            {% else %}
+                                                 <input id="email_radio_{{forloop.counter}}" class="input" type="text" name="email" value="{{ emailaddress.email }}" id="{{ form.email.id_for_label }}" {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{%endif %} />     
+                                            {% endif %}
+                                                <div class="is-size-7 has-text-left">
+                                                {% if emailaddress.verified %}
+                                                    {% trans "Verified" %} {% if emailaddress.primary %}{% trans "Primary" %}{% endif %}
+                                                {% else %}
+                                                    {% trans "Unverified" %}
+                                                {% endif %}
+                                                </div>
+                                            </label>
+                                            <div class="is-size-7 has-text-left">
+                                                {{ form.email.errors|escape }}
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="id_account_{{ base_account.id }}" name="account" value="{{ base_account.id }}" />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="column is-6-tablet">
-                <button type="submit" name="action_add" class="button is-primary mb-4">Add Mail</button>
-            </div>
-            <div class="column is-6-tablet">
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">Primary Email</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input class="input" type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" value="{{ user.email }}" disabled>
-                                <div class="pt-2 is-size-7 has-text-left">
-                                    {% if email_verified %}
-                                        <p>Your email is verified.</p>
-                                    {% else %}
-                                        <p>Your email is not verified.</p>
-                                    {% endif %}
-                                    {{ form.email.errors|escape }}
+                        </td>
+                        <td>
+                            <div class="field">
+                                <div class="control">
+                                    <button name="action_primary" type="submit" class="button mb-4">Make Primary</button>
+                                
+                                {% if emailaddress.verified == false %}
+                                    <button name="action_send" type="submit" class="button mb-4">Re-send Verification </button>
+                                {% endif %}
+                                {% if emailaddress.primary == false %}
+                                    <button name="action_remove" type="submit" class="button mb-4">Remove</button>
+                                {% endif %}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="column is-6-tablet">
-                <button name="action_primary" type="submit" class="button mb-4">Make Primary</button>
-                <button name="action_send" type="submit" class="button mb-4">Re-send Verification </button>
-                <button name="action_remove" type="submit" class="button mb-4">Remove</button>
-            </div>
-            <div class="column is-6-tablet">
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">Secondary Email</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input class="input" type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" value="{{ user.email }}" disabled>
-                                <div class="pt-2 is-size-7 has-text-left">
-                                    {% if email_verified %}
-                                        <p>Your email is verified.</p>
-                                    {% else %}
-                                        <p>Your email is not verified.</p>
-                                    {% endif %}
-                                    {{ form.email.errors|escape }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="column is-6-tablet">
-                 <button name="action_primary" type="submit" class="button mb-4">Make Primary</button>
-                <button name="action_send" type="submit" class="button mb-4">Re-send Verification </button>
-                <button name="action_remove" type="submit" class="button mb-4">Remove</button>
-            </div>
-        </div>
+                        </td>
+                    </tr>
+                </form>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
 </section>
-
-
 
 {% endblock %}

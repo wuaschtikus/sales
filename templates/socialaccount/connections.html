@@ -11,42 +11,53 @@
 
 <section class="pl-2 pr-2">
     <div class="box">
-        <div class="columns is-multiline">
-            {% for base_account in form.accounts %}
-                <form method="post" class="column is-6-tablet" action="{% url 'socialaccount_connections' %}">
-                    {% csrf_token %}
-                    <div class="field is-horizontal">
+        <table class="table">
+            <tbody>
+                {% for base_account in form.accounts %}
+                <tr>
+                    <td>
                         <div class="field-label is-normal">
                             <label class="label">Social Account</label>
                         </div>
-                        <div class="field-body">
+                    </td>
+                    <td style="width: 500px;">
+                        <form method="post" action="{% url 'socialaccount_connections' %}">
+                            {% csrf_token %}
                             <div class="field">
-                                <div class="control">
-                                    {% with base_account.get_provider_account as account %}
-                                    <input class="input" type="text" value="{{account.get_brand.name}} {{ account }}" disabled>
-                                    <div class="is-size-7 has-text-left">
-                                        {% if form.non_field_errors %}
-                                        {{ form.non_field_errors }}
-                                        {% endif %}
+                                <div class="field-body">
+                                    <div class="field">
+                                        <div class="control">
+                                            {% with base_account.get_provider_account as account %}
+                                            <input class="input" type="text" value="{{ account.get_brand.name }} {{ account }}" disabled>
+                                            <div class="is-size-7 has-text-left">
+                                                {% if form.non_field_errors %}
+                                                {{ form.non_field_errors }}
+                                                {% endif %}
+                                            </div>
+                                            {% endwith %}
+                                        </div>
+                                        <input type="hidden" id="id_account_{{ base_account.id }}" name="account" value="{{ base_account.id }}" />
                                     </div>
-                                    {% endwith %}
                                 </div>
-                                 <input type="hidden" id="id_account_{{ base_account.id }}" name="account" value="{{ base_account.id }}" />
                             </div>
-                            <div class="field">
-                                <div class="control">
-                                    <button type="submit" name="action_remove" class="button is-danger">
-                                        {% trans "Remove" %}
-                                    </button>
-                                </div>
+                        </form>
+                    </td>
+                    <td>
+                        <div class="field">
+                            <div class="control">
+                                <button type="submit" name="action_remove" class="button is-danger">
+                                    {% trans "Remove" %}
+                                </button>
                             </div>
                         </div>
-                    </div>
-                </form>
-            {% endfor %}
-        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            <tbody>
+        </table>
     </div>
 </section>
+
 
 
 {% comment %} 
