@@ -29,7 +29,7 @@ urlpatterns = [
     # required by allauth
     path('accounts/', include('allauth.urls')),
     path('login/', TemplateView.as_view(template_name='account/login.html'), name='login'),
-] 
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 

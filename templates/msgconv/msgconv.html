@@ -1,15 +1,21 @@
 {% extends '../base/base.html' %}
 {% block content %}
 {% include '../base/snippets/navbar.html' %}
-    <div class="box m-6 pb-6">
+
+<section class="pb-2">
+    <div class="pl-5">
+        <h1 class="title">Add Email</h1>
+    </div>
+</section>
+
+<section>
+    <div class="box ml-6 mr-6">
         <h1>Upload a File</h1>
         <form id="upload-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="field">
                 <label class="label">Convert single .msg file to .eml</label>
-                <div class="control">
-                    
-                </div>
+                <p>Convert MSG files, which are commonly used by Microsoft Outlook to store individual email messages, into EML files, a more universal format that is widely supported by various email clients for storing email data in a text-based format.</p>
             </div>
             <div class="file has-name is-fullwidth">
                 <label class="file-label">
@@ -29,7 +35,7 @@
                     </span>
                 </label>
             </div>
-            <button type="submit" class="button is-primary">Upload</button>
+            <button type="submit" class="button is-primary">Convert</button>
         </form>
 
         <script>
@@ -48,6 +54,23 @@
         </script>
         </div>
     </div>
+</section>
 
-    {% endblock %}
+{% if eml_download_url %}
+<section class="pb-2 pt-2">
+    <div class="pl-5">
+        <h3 class="title">Result</h3>
+    </div>
+</section>
+
+<section>
+    <div class="box ml-6 mr-6">
+        <label class="label">File Size: {{ file_size }}</label>
+        <a href="{{ eml_download_url }}" class="button">Download {{ file_name_download }}</a>
+    </div>
+</section>
+{% endif %}
+    
+
+{% endblock %}
 
