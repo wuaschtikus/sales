@@ -4,7 +4,7 @@
 
 <section class="pb-2">
     <div class="pl-5">
-        <h1 class="title">Add Email</h1>
+        <h1 class="title">Convert MSG to EML</h1>
     </div>
 </section>
 
@@ -65,8 +65,30 @@
 
 <section>
     <div class="box ml-6 mr-6">
-        <label class="label">File Size: {{ file_size }}</label>
-        <a href="{{ eml_download_url }}" class="button">Download {{ file_name_download }}</a>
+        <table class="table is-borderless">
+            <tbody>
+                <tr>
+                    <td>Filesize</td>
+                    <td>{{ file_size }}</td>
+                <tr>
+                <tr>
+                    <td>Attachments found</td>
+                    <td>{{ summary.attachments_count }}</td>
+                <tr>
+                <tr>
+                    <td>Date</td>
+                    <td>{{ summary.mail_date }}</td>
+                <tr>
+                <tr>
+                    <td>Email Addresses</td>
+                    <td>{{ summary.email_addresses }}</td>
+                <tr>
+                <tr>
+                    <td>Download</td>
+                    <td><a href="{{ eml_download_url }}" class="button">{{ file_name_download }}</a></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </section>
 {% endif %}

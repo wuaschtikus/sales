@@ -1,8 +1,8 @@
-
+import os
 import extract_msg
 from email.message import EmailMessage
 
-def convert_msg_to_eml(msg_file_path, eml_file_path):
+def msg_convert_msg_to_eml(msg_file_path, eml_file_path):
     # Load the .msg file
     msg = extract_msg.Message(msg_file_path)
     
@@ -37,7 +37,24 @@ def convert_msg_to_eml(msg_file_path, eml_file_path):
     
     return eml_file_path
 
-# Example usage:
-# msg_file = "../data/msg/Test1.msg"
-# eml_file = "../data/eml/Test1.eml"
-# convert_msg_to_eml(msg_file, eml_file)
+def msg_count_attachments(msg_file_path):
+    if extract_msg.Message(msg_file_path).attachments:
+        count_attachments = len(extract_msg.Message(msg_file_path).attachments)
+        return count_attachments
+    
+    return 0
+
+def msg_date(msg_file_path):
+    msg = extract_msg.Message(msg_file_path)
+    
+    return msg.contacts
+
+def msg_email_addresses(msg_file_path):
+    msg = extract_msg.Message(msg_file_path)
+    addresses = []
+    for rec in msg.recipients:
+        addresses.append(rec.email)
+    addresses.append(msg.sender)
+    
+    return addresses
+    
