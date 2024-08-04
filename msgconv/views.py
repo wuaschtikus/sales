@@ -38,7 +38,7 @@ class MsgConv(View):
             logger.info(f'File {uploaded_file.name} written to disk at {msg_path}')
             
             # Convert the file to EML format
-            eml_path = os.path.join(settings.MEDIA_ROOT, 'eml_files', uploaded_file.name.replace('msg', 'eml'))
+            eml_path = os.path.join(settings.EML_FILES_DIR, uploaded_file.name.replace('msg', 'eml'))
             eml_path = self._convert_to_eml(msg_path, eml_path)
             logger.info(f'Converted file {uploaded_file.name} to EML at {eml_path}')
             
@@ -46,13 +46,12 @@ class MsgConv(View):
             file_size = self._get_readable_file_size(uploaded_file.size)
             
             # Extract attachments
-            attachments_output_path = os.path.join(settings.MEDIA_ROOT, 'msg_attachments_extracted')
-            attachments_download_path = msg_extract_attachments(msg_path, attachments_output_path, attachments_output_path)
+            attachments_download_path = msg_extract_attachments(msg_path, settings.MSG_ATTACHMENTS_DIR, settings.MSG_ATTACHMENTS_DIR)
             print('Attachments: ' + str(attachments_download_path))
                         
             # Generate download URL for the EML file
             eml_filename = os.path.basename(eml_path)
-            eml_download_url = os.path.join(settings.MEDIA_URL, 'eml_files', eml_filename)
+            eml_download_url = os.path.join(settings.EML_FILES_DIR, eml_filename)
             
             # Extract summary information from the message
             summary = msg_extract_info(msg_path)
@@ -78,7 +77,7 @@ class MsgConv(View):
         return render(request, self.template_name, {'form': form})
     
     def _write_to_disc(self, uploaded_file):
-        save_path = os.path.join(settings.MEDIA_ROOT, 'msg_files', uploaded_file.name)
+        save_path = os.path.join(settings.MSG_FILES_DIR, uploaded_file.name)
         
         # Write the uploaded file to disk
         with open(save_path, 'wb') as f:
