@@ -18,17 +18,14 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
-
+    
 # get secrest keys
 GOOGLE_AUTH_CLIENT_ID=os.getenv('GOOGLE_AUTH_CLIENT_ID')
 GOOGLE_AUTH_CLIENT_SECRET=os.getenv('GOOGLE_AUTH_CLIENT_SECRET')
 GOOGLE_AUTH_CLIENT_KEY=os.getenv('GOOGLE_AUTH_CLIENT_KEY')
-DATABASE_NAME=os.getenv('SALES_DATABASE_NAME')
-DATABASE_USER=os.getenv('SALES_DATABASE_USER')
-DATABASE_PASSSWORD=os.getenv('SALES_DATABASE_PASSWORD')
-
-print('Databasepw: ' + GOOGLE_AUTH_CLIENT_ID)
-
+SALES_DATABASE_NAME=os.getenv('SALES_DATABASE_NAME')
+SALES_DATABASE_USER=os.getenv('SALES_DATABASE_USER')
+SALES_DATABASE_PASSSWORD=os.getenv('SALES_DATABASE_PASSWORD')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -175,9 +172,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': DATABASE_NAME,
-            'USER': DATABASE_USER,
-            'PASSWORD': DATABASE_PASSSWORD,
+            'NAME': SALES_DATABASE_NAME,
+            'USER': SALES_DATABASE_USER,
+            'PASSWORD': SALES_DATABASE_PASSSWORD,
             'HOST': 'db',  # This matches the service name defined in docker-compose.yml
             'PORT': '5432',
         }
