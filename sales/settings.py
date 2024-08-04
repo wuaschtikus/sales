@@ -23,6 +23,12 @@ load_dotenv()
 GOOGLE_AUTH_CLIENT_ID=os.getenv('GOOGLE_AUTH_CLIENT_ID')
 GOOGLE_AUTH_CLIENT_SECRET=os.getenv('GOOGLE_AUTH_CLIENT_SECRET')
 GOOGLE_AUTH_CLIENT_KEY=os.getenv('GOOGLE_AUTH_CLIENT_KEY')
+DATABASE_NAME=os.getenv('SALES_DATABASE_NAME')
+DATABASE_USER=os.getenv('SALES_DATABASE_USER')
+DATABASE_PASSSWORD=os.getenv('SALES_DATABASE_PASSWORD')
+
+print('Databasepw: ' + GOOGLE_AUTH_CLIENT_ID)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,13 +36,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l#0#!5rpz9!#^ek-3_)je%l(d_g!uh&l!ng(!#mh$bvq%us(ya'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# Additional settings
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback_secret_key')
+DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 
 
 # Application definition
@@ -134,10 +137,7 @@ LOGOUT_REDIRECT_URL = '/'  # Redirect to home page after logout
 
 #LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_URL = '/'
-
 ACCOUNT_SESSION_REMEMBER = True
-
-
 ROOT_URLCONF = 'sales.urls'
 
 TEMPLATES = [
@@ -165,10 +165,21 @@ WSGI_APPLICATION = 'sales.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': DATABASE_NAME,
+        'USER': DATABASE_USER,
+        'PASSWORD': DATABASE_PASSSWORD,
+        'HOST': 'db',  # This matches the service name defined in docker-compose.yml
+        'PORT': '5432',
     }
 }
 
