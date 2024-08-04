@@ -50,7 +50,8 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
-.env 
+.env
+venv 
 media/*
 
 
