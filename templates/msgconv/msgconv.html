@@ -70,19 +70,43 @@
                 <tr>
                     <td>Filesize</td>
                     <td>{{ file_size }}</td>
+                </tr>
                 <tr>
+                    <td>Subject</td>
+                    <td>{{ summary.subject }}</td>
+                </tr>
                 <tr>
                     <td>Attachments found</td>
-                    <td>{{ summary.attachments_count }}</td>
+                    <td>{{ summary.attachment_count }}</td>
+                </tr>
                 <tr>
+                    <td>Donwnload attachments</td>
+                    <td>
+                    {% for attachment in attachments_download_paths %}
+                        <a href="{{ attachment.download_path }}" class="button">{{ attachment.filename }}</a>
+                    {% endfor %}
+                    </td>
+                </tr>
+                 <tr>
+                    <td>Mail was sent</td>
+                    <td>{% if summary.is_sent %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}</td>
+                </tr>
                 <tr>
-                    <td>Date</td>
-                    <td>{{ summary.mail_date }}</td>
+                    <td>Date sent</td>
+                    <td>{{ summary.message_date }}</td>
+                </tr>
                 <tr>
+                    <td>Recieved by server</td>
+                    <td>{{ summary.received_by_server_date}}</td>
+                </tr>
                 <tr>
                     <td>Email Addresses</td>
                     <td>{{ summary.email_addresses }}</td>
-                <tr>
+                </tr>
                 <tr>
                     <td>Download</td>
                     <td><a href="{{ eml_download_url }}" class="button">{{ file_name_download }}</a></td>

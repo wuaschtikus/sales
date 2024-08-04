@@ -1,7 +1,6 @@
 import os
 import logging
-from .core.msgconv import msg_convert_msg_to_eml, msg_email_addresses, msg_count_attachments, msg_date
-from django.views.generic import ListView, DetailView, FormView
+from .core.msgconv import msg_extract_info, msg_convert_msg_to_eml, msg_extract_attachments
 from .forms import MyFileUploadForm
 from django.shortcuts import render
 from django.views import View
@@ -31,45 +30,51 @@ class MsgConv(View):
         form = MyFileUploadForm(request.POST, request.FILES)
         
         if form.is_valid():
-            # Process the file here
             uploaded_file = request.FILES['file']
-            logger.info(f'Uploaded file { uploaded_file.name }')
+            logger.info(f'Uploaded file {uploaded_file.name}')
             
+            # Write the file to disk
             msg_path = self._write_to_disc(uploaded_file)
-            logger.info(f'Write file { uploaded_file.name } to disc { msg_path} ')
+            logger.info(f'File {uploaded_file.name} written to disk at {msg_path}')
             
+            # Convert the file to EML format
             eml_path = os.path.join(settings.MEDIA_ROOT, 'eml_files', uploaded_file.name.replace('msg', 'eml'))
             eml_path = self._convert_to_eml(msg_path, eml_path)
-            logger.info(f'Converted file { uploaded_file.name } to EML { eml_path }')
+            logger.info(f'Converted file {uploaded_file.name} to EML at {eml_path}')
             
+            # Get readable file size
             file_size = self._get_readable_file_size(uploaded_file.size)
             
-            # Generate the download URL for the EML file
+            # Extract attachments
+            attachments_output_path = os.path.join(settings.MEDIA_ROOT, 'msg_attachments_extracted')
+            attachments_download_path = msg_extract_attachments(msg_path, attachments_output_path, attachments_output_path)
+            print('Attachments: ' + str(attachments_download_path))
+                        
+            # Generate download URL for the EML file
             eml_filename = os.path.basename(eml_path)
             eml_download_url = os.path.join(settings.MEDIA_URL, 'eml_files', eml_filename)
             
-            summary = {
-                'attachments_count': msg_count_attachments(msg_path),
-                'date': msg_date(msg_path),
-                'email_addresses': msg_email_addresses(msg_path)
-            }
+            # Extract summary information from the message
+            summary = msg_extract_info(msg_path)
             
-            # Delete original file 
-            # Check if the file exists before attempting to delete it
+            # Delete the original MSG file if it exists
             if os.path.exists(msg_path):
                 os.remove(msg_path)
-                print(f"{msg_path} has been deleted successfully.")
+                logger.info(f'{msg_path} has been deleted successfully.')
             else:
-                print(f"The file {msg_path} does not exist.")
-                        
-            # Render and provide download link 
-            return render(request, self.template_name, {
+                logger.warning(f'The file {msg_path} does not exist.')
+            
+            # Render the template with the necessary context
+            context = {
                 'file_name': uploaded_file.name,
                 'file_name_download': uploaded_file.name.replace('msg', 'eml'),
                 'eml_download_url': eml_download_url,
                 'file_size': file_size,
+                'attachments_download_paths': attachments_download_path,
                 'summary': summary
-            })
+            }
+            return render(request, self.template_name, context)
+        
         return render(request, self.template_name, {'form': form})
     
     def _write_to_disc(self, uploaded_file):
@@ -84,18 +89,14 @@ class MsgConv(View):
     
     def _convert_to_eml(self, msg_path, eml_path):
         eml = msg_convert_msg_to_eml(msg_path, eml_path)
-        
         return eml
     
     def _get_readable_file_size(self, size_in_bytes):
-        # Define the size units in order
         size_units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB']
-        size_index = 0  # Starting with Bytes
+        size_index = 0
 
-        # Convert size to the appropriate unit
         while size_in_bytes >= 1024 and size_index < len(size_units) - 1:
             size_in_bytes /= 1024
             size_index += 1
 
-        # Return the size and the unit
         return f"{size_in_bytes:.2f} {size_units[size_index]}"

@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', include('users.urls')),
     path('', include('msgconv.urls')),
-    
+    path('', TemplateView.as_view(template_name='msgconv/index.html'), name='login'),
     path('admin/', admin.site.urls),
     path('msgconv/', include('msgconv.urls')),
     # required by allauth
