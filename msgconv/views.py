@@ -1,5 +1,6 @@
 import os
 import logging
+import uuid
 from .core.msgconv import msg_extract_info, msg_convert_msg_to_eml, msg_extract_attachments, msg_convert_msg_to_eml_with_signed
 from .forms import MyFileUploadForm
 from django.shortcuts import render
@@ -30,19 +31,31 @@ class MsgConv(View):
         form = MyFileUploadForm(request.POST, request.FILES)
         
         if form.is_valid():
+            # create folder structure
+            tmp = str(uuid.uuid4())
+            tmp_dir = os.path.join(settings.MEDIA_ROOT, tmp)
+            tmp_dir_attachments = os.path.join(tmp_dir, 'attachments')
+            tmp_dir_msg = os.path.join(tmp_dir, 'msg')
+            tmp_dir_eml = os.path.join(tmp_dir, 'eml')
+            tmp_dir_download_eml = os.path.join(settings.MEDIA_URL, 'eml')
+            tmp_dir_download_attachments = os.path.join(settings.MEDIA_URL, 'attachments')
+            os.makedirs(tmp_dir_attachments, exist_ok=True)
+            os.makedirs(tmp_dir_msg, exist_ok=True)
+            os.makedirs(tmp_dir_eml, exist_ok=True)
+            
             uploaded_file = request.FILES['file']
             logger.info(f'Uploaded file {uploaded_file.name}')
             
             # Write the file to disk
-            msg_path = self._write_to_disc(uploaded_file)
+            msg_path = self._write_to_disc(uploaded_file, os.path.join(tmp_dir_msg, uploaded_file.name))
             logger.info(f'File {uploaded_file.name} written to disk at {msg_path}')
             
             # Extract attachments (also signed attachments)
-            attachments_download_path = msg_extract_attachments(msg_path, settings.MSG_ATTACHMENTS_DIR, settings.MSG_ATTACHMENTS_DIR_REL) 
+            attachments_download_path = msg_extract_attachments(msg_path, tmp_dir_attachments, tmp_dir_download_attachments) 
             attachments_download_paths = [d['download_path'] for d in attachments_download_path]
             
             # Convert the file to EML format
-            eml_path = os.path.join(settings.EML_FILES_DIR, uploaded_file.name.replace('msg', 'eml'))
+            eml_path = os.path.join(tmp_dir_eml, uploaded_file.name.replace('msg', 'eml'))
             eml_path = self._convert_to_eml(msg_path, eml_path, attachments_download_paths)
             logger.info(f'Converted file {uploaded_file.name} to EML at {eml_path}')
             
@@ -51,7 +64,7 @@ class MsgConv(View):
             
             # Generate download URL for the EML file
             eml_filename = os.path.basename(eml_path)
-            eml_download_url = os.path.join(settings.EML_FILES_DIR_REL, eml_filename)
+            eml_download_url = os.path.join(tmp_dir_download_eml, eml_filename)
             
             # Extract summary information from the message
             summary = msg_extract_info(msg_path)
@@ -77,9 +90,7 @@ class MsgConv(View):
         
         return render(request, self.template_name, {'form': form})
     
-    def _write_to_disc(self, uploaded_file):
-        save_path = os.path.join(settings.MSG_FILES_DIR, uploaded_file.name)
-        
+    def _write_to_disc(self, uploaded_file, save_path):        
         # Write the uploaded file to disk
         with open(save_path, 'wb') as f:
             for chunk in uploaded_file.chunks():
