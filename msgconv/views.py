@@ -1,6 +1,6 @@
 import os
 import logging
-from .core.msgconv import msg_extract_info, msg_convert_msg_to_eml, msg_extract_attachments
+from .core.msgconv import msg_extract_info, msg_convert_msg_to_eml, msg_extract_attachments, msg_convert_msg_to_eml_with_signed
 from .forms import MyFileUploadForm
 from django.shortcuts import render
 from django.views import View
@@ -37,21 +37,21 @@ class MsgConv(View):
             msg_path = self._write_to_disc(uploaded_file)
             logger.info(f'File {uploaded_file.name} written to disk at {msg_path}')
             
+            # Extract attachments (also signed attachments)
+            attachments_download_path = msg_extract_attachments(msg_path, settings.MSG_ATTACHMENTS_DIR, settings.MSG_ATTACHMENTS_DIR_REL) 
+            attachments_download_paths = [d['download_path'] for d in attachments_download_path]
+            
             # Convert the file to EML format
             eml_path = os.path.join(settings.EML_FILES_DIR, uploaded_file.name.replace('msg', 'eml'))
-            eml_path = self._convert_to_eml(msg_path, eml_path)
+            eml_path = self._convert_to_eml(msg_path, eml_path, attachments_download_paths)
             logger.info(f'Converted file {uploaded_file.name} to EML at {eml_path}')
             
             # Get readable file size
             file_size = self._get_readable_file_size(uploaded_file.size)
             
-            # Extract attachments
-            attachments_download_path = msg_extract_attachments(msg_path, settings.MSG_ATTACHMENTS_DIR, settings.MSG_ATTACHMENTS_DIR)
-            print('Attachments: ' + str(attachments_download_path))
-                        
             # Generate download URL for the EML file
             eml_filename = os.path.basename(eml_path)
-            eml_download_url = os.path.join(settings.EML_FILES_DIR, eml_filename)
+            eml_download_url = os.path.join(settings.EML_FILES_DIR_REL, eml_filename)
             
             # Extract summary information from the message
             summary = msg_extract_info(msg_path)
@@ -70,6 +70,7 @@ class MsgConv(View):
                 'eml_download_url': eml_download_url,
                 'file_size': file_size,
                 'attachments_download_paths': attachments_download_path,
+                'attachments_count': str(len(attachments_download_path)) ,
                 'summary': summary
             }
             return render(request, self.template_name, context)
@@ -86,8 +87,9 @@ class MsgConv(View):
                 
         return save_path
     
-    def _convert_to_eml(self, msg_path, eml_path):
-        eml = msg_convert_msg_to_eml(msg_path, eml_path)
+    def _convert_to_eml(self, msg_path, eml_path, attachments):
+        eml = msg_convert_msg_to_eml_with_signed(msg_path, eml_path, attachments)
+        # eml = msg_convert_msg_to_eml(msg_path, eml_path)
         return eml
     
     def _get_readable_file_size(self, size_in_bytes):

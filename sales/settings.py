@@ -95,7 +95,14 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-# Directory paths
+
+# Directory paths - Relative
+# required for download links
+EML_FILES_DIR_REL = os.path.join(MEDIA_URL, 'eml_files')
+MSG_FILES_DIR_REL = os.path.join(MEDIA_URL, 'msg_files')
+MSG_ATTACHMENTS_DIR_REL = os.path.join(MEDIA_URL, 'msg_attachments_extracted')
+
+# Directory paths - Ansolute 
 EML_FILES_DIR = os.path.join(MEDIA_ROOT, 'eml_files')
 MSG_FILES_DIR = os.path.join(MEDIA_ROOT, 'msg_files')
 MSG_ATTACHMENTS_DIR = os.path.join(MEDIA_ROOT, 'msg_attachments_extracted')

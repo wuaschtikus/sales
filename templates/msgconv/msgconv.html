@@ -77,17 +77,17 @@
                 </tr>
                 <tr>
                     <td>Attachments found</td>
-                    <td>{{ summary.attachment_count }}</td>
+                    <td>{{ attachments_count }}</td>
                 </tr>
                 <tr>
-                    <td>Donwnload attachments</td>
+                    <td>Download attachments</td>
                     <td>
                     {% for attachment in attachments_download_paths %}
                         <a href="{{ attachment.download_path }}" class="button">{{ attachment.filename }}</a>
                     {% endfor %}
                     </td>
                 </tr>
-                 <tr>
+                <tr>
                     <td>Mail was sent</td>
                     <td>{% if summary.is_sent %}
                         Yes
