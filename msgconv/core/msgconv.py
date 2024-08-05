@@ -2,7 +2,7 @@ import os
 import extract_msg
 import email
 from django.conf import settings
-
+from asn1crypto import cms, pem
 from email.message import EmailMessage
 from email import policy
 from email.parser import BytesParser, Parser
@@ -272,3 +272,36 @@ def process_part(part, output_dir, download_base_url, attachments_info):
         })
 
     return attachments_info
+
+def read_p7s(file_path):
+    """
+    Reads and parses a .p7s file (PKCS7 signature file) to extract and return the signer issuer information.
+
+    Args:
+        file_path (str): The path to the .p7s file.
+
+    Returns:
+        str: A formatted string with the signer issuer's human-friendly information.
+
+    Raises:
+        ValueError: If the file is not a valid PKCS7 file or if parsing fails.
+    """
+    # Read the .p7s file in binary mode
+    with open(file_path, 'rb') as f:
+        p7s_data = f.read()
+
+    # Check if the file is in PEM format and convert it to DER format if needed
+    if pem.detect(p7s_data):
+        _, _, p7s_data = pem.unarmor(p7s_data)
+
+    # Load the PKCS7 content
+    content_info = cms.ContentInfo.load(p7s_data)
+    signed_data = content_info['content']
+
+    # Iterate over signer information and return the issuer details
+    for signer_info in signed_data['signer_infos']:
+        sid = signer_info['sid']
+        issuer_and_serial = sid.chosen
+        return f"Signer Issuer: {issuer_and_serial['issuer'].human_friendly}"
+
+    return None  # If no signer information is found, return None
