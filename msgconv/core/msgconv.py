@@ -1,6 +1,6 @@
 import os
 import extract_msg
-import email
+import hashlib
 from django.conf import settings
 from asn1crypto import cms, pem
 from email.message import EmailMessage
@@ -165,8 +165,24 @@ def msg_extract_info(msg_file_path):
         "received_by_server_date": readable_received_by_server_date,
         "email_addresses": email_addresses,
         "subject": subject,
-        "is_sent": is_sent
+        "is_sent": is_sent, 
+        'msg_hash': generate_file_hash(msg_file_path),
     }
+    
+def generate_file_hash(file_path, hash_algorithm='md5'):
+    # Initialize the hash algorithm (e.g., sha256, md5, sha1)
+        try:
+            hash_algo = hashlib.new(hash_algorithm)
+        except ValueError:
+            raise ValueError(f'Unsupported hash type: {hash_algorithm}')
+        
+        # Open the file in binary mode and read in chunks
+        with open(file_path, 'rb') as f:
+            while chunk := f.read(8192):  # Read the file in chunks of 8KB
+                hash_algo.update(chunk)
+        
+        # Return the hexadecimal digest of the hash
+        return hash_algo.hexdigest()
 
 def msg_extract_attachments(msg_file_path, output_dir, download_base_url):
     """

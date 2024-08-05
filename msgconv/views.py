@@ -1,7 +1,7 @@
 import os
 import logging
 import uuid
-from .core.msgconv import msg_extract_info, msg_convert_msg_to_eml, msg_extract_attachments, msg_convert_msg_to_eml_with_signed
+from .core.msgconv import msg_extract_info, msg_extract_attachments, msg_convert_msg_to_eml_with_signed
 from .forms import MyFileUploadForm
 from django.shortcuts import render
 from django.views import View
@@ -37,8 +37,8 @@ class MsgConv(View):
             tmp_dir_attachments = os.path.join(tmp_dir, 'attachments')
             tmp_dir_msg = os.path.join(tmp_dir, 'msg')
             tmp_dir_eml = os.path.join(tmp_dir, 'eml')
-            tmp_dir_download_eml = os.path.join(settings.MEDIA_URL, 'eml')
-            tmp_dir_download_attachments = os.path.join(settings.MEDIA_URL, 'attachments')
+            tmp_dir_download_eml = os.path.join(settings.MEDIA_URL, tmp, 'eml')
+            tmp_dir_download_attachments = os.path.join(settings.MEDIA_URL, tmp, 'attachments')
             os.makedirs(tmp_dir_attachments, exist_ok=True)
             os.makedirs(tmp_dir_msg, exist_ok=True)
             os.makedirs(tmp_dir_eml, exist_ok=True)
@@ -83,7 +83,7 @@ class MsgConv(View):
                 'eml_download_url': eml_download_url,
                 'file_size': file_size,
                 'attachments_download_paths': attachments_download_path,
-                'attachments_count': str(len(attachments_download_path)) ,
+                'attachments_count': str(len(attachments_download_path)),
                 'summary': summary
             }
             return render(request, self.template_name, context)
@@ -112,3 +112,4 @@ class MsgConv(View):
             size_index += 1
 
         return f"{size_in_bytes:.2f} {size_units[size_index]}"
+    
