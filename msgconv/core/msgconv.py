@@ -98,7 +98,6 @@ def msg_convert_msg_to_eml_with_signed(msg_file_path, eml_file_path, msg_attachm
     
     # Handle additional attachments from files
     if additional_attachments:
-        print('Additional attachments' + str(additional_attachments))
         for file_path in additional_attachments:
             path = os.path.join(msg_attachments_path, os.path.basename(file_path))
             if os.path.isfile(path):
@@ -114,7 +113,6 @@ def msg_convert_msg_to_eml_with_signed(msg_file_path, eml_file_path, msg_attachm
                         subtype=subtype,
                         filename=file_name
                     )
-                    print(f'Added attachment from file: {file_name}')
     
     # Save the email message as an .eml file
     with open(eml_file_path, 'wb') as eml_file:
@@ -211,7 +209,7 @@ def msg_extract_attachments(msg_file_path, output_dir, download_base_url):
         # Get the attachment file name
         attachment_filename = attachment.longFilename if attachment.longFilename else attachment.shortFilename
         attachment_filepath = os.path.join(output_dir, attachment_filename)
-        print(attachment.treePath)
+
         if attachment.mimetype == 'multipart/signed':
             attachments_info = msg_extract_signed_attachments(attachment.data, output_dir, download_base_url)
         else:
@@ -225,7 +223,8 @@ def msg_extract_attachments(msg_file_path, output_dir, download_base_url):
             # Add a dictionary with filename and download path to the list
             attachments_info.append({
                 'filename': attachment_filename,
-                'download_path': download_url
+                'download_path': download_url,
+                'signed_attachment': False
             })
 
     return attachments_info
@@ -286,7 +285,8 @@ def process_part(part, output_dir, download_base_url, attachments_info):
         download_url = os.path.join(download_base_url, filename)
         attachments_info.append({
             'filename': filename,
-            'download_path': download_url
+            'download_path': download_url,
+            'signed_attachment': True
         })
 
     return attachments_info
