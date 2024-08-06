@@ -56,7 +56,7 @@ class MsgConv(View):
             
             # Convert the file to EML format
             eml_path = os.path.join(tmp_dir_eml, uploaded_file.name.replace('msg', 'eml'))
-            eml_path = self._convert_to_eml(msg_path, eml_path, attachments_download_paths)
+            eml_path = self._convert_to_eml(msg_path, eml_path, tmp_dir_attachments, attachments_download_paths)
             logger.info(f'Converted file {uploaded_file.name} to EML at {eml_path}')
             
             # Get readable file size
@@ -98,9 +98,8 @@ class MsgConv(View):
                 
         return save_path
     
-    def _convert_to_eml(self, msg_path, eml_path, attachments):
-        eml = msg_convert_msg_to_eml_with_signed(msg_path, eml_path, attachments)
-        # eml = msg_convert_msg_to_eml(msg_path, eml_path)
+    def _convert_to_eml(self, msg_path, eml_path, msg_attachments_path, attachments):
+        eml = msg_convert_msg_to_eml_with_signed(msg_path, eml_path, msg_attachments_path, attachments)
         return eml
     
     def _get_readable_file_size(self, size_in_bytes):

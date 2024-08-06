@@ -68,7 +68,7 @@ def msg_convert_msg_to_eml(msg_file_path, eml_file_path):
     
     return eml_file_path
 
-def msg_convert_msg_to_eml_with_signed(msg_file_path, eml_file_path, additional_attachments=None):
+def msg_convert_msg_to_eml_with_signed(msg_file_path, eml_file_path, msg_attachments_path, additional_attachments=None):
     """
     Converts a .msg email file to an .eml file format and adds additional attachments if provided.
 
@@ -98,9 +98,11 @@ def msg_convert_msg_to_eml_with_signed(msg_file_path, eml_file_path, additional_
     
     # Handle additional attachments from files
     if additional_attachments:
+        print('Additional attachments' + str(additional_attachments))
         for file_path in additional_attachments:
-            path = os.path.join(settings.MSG_ATTACHMENTS_DIR, os.path.basename(file_path))
+            path = os.path.join(msg_attachments_path, os.path.basename(file_path))
             if os.path.isfile(path):
+                
                 with open(path, 'rb') as attachment_file:
                     file_data = attachment_file.read()
                     file_name = os.path.basename(path)
