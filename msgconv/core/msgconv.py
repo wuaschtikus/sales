@@ -209,7 +209,7 @@ def msg_extract_attachments(msg_file_path, output_dir, download_base_url):
         # Get the attachment file name
         attachment_filename = attachment.longFilename if attachment.longFilename else attachment.shortFilename
         attachment_filepath = os.path.join(output_dir, attachment_filename)
-        
+        print(attachment.treePath)
         if attachment.mimetype == 'multipart/signed':
             attachments_info = msg_extract_signed_attachments(attachment.data, output_dir, download_base_url)
         else:
