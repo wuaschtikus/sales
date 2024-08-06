@@ -115,6 +115,16 @@
                     <td>Download</td>
                     <td><a href="{{ eml_download_url }}" class="button">{{ file_name_download }}</a></td>
                 </tr>
+                <tr>
+                    <form method="post" action="{% url 'delete_files' %}">
+                        {% csrf_token %}
+                        <td>Purge all files</td>
+                        <td>
+                            <input type="text" name="delete_files_id" value="{{ id }}" hidden>
+                            <button type="submit" name="delete_files" class="button is-danger">Delete</button>
+                        </td>
+                    </form>
+                </tr>
             </tbody>
         </table>
     </div>
