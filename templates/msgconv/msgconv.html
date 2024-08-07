@@ -73,7 +73,7 @@
                 </tr>
                 <tr>
                     <td>Subject</td>
-                    <td>{{ summary.subject }}</td>
+                    <td>{{ result_file_info.subject }}</td>
                 </tr>
                 <tr>
                     <td>Attachments found</td>
@@ -82,14 +82,18 @@
                 <tr>
                     <td>Download attachments</td>
                     <td>
+                    {% if attachments_download_paths %}
                     {% for attachment in attachments_download_paths %}
                         <a href="{{ attachment.download_path }}" class="button">{{ attachment.filename }}</a>
                     {% endfor %}
+                    {% else %}
+                        No attachments available
+                    {% endif %}
                     </td>
                 </tr>
                 <tr>
                     <td>Mail was sent</td>
-                    <td>{% if summary.is_sent %}
+                    <td>{% if result_file_info.is_sent %}
                         Yes
                     {% else %}
                         No
@@ -97,19 +101,19 @@
                 </tr>
                 <tr>
                     <td>Date sent</td>
-                    <td>{{ summary.message_date }}</td>
+                    <td>{{ result_file_info.message_date }}</td>
                 </tr>
                 <tr>
                     <td>Recieved by server</td>
-                    <td>{{ summary.received_by_server_date}}</td>
+                    <td>{{ result_file_info.received_by_server_date}}</td>
                 </tr>
                 <tr>
                     <td>Email Addresses</td>
-                    <td>{{ summary.email_addresses }}</td>
+                    <td>{{ result_file_info.email_addresses }}</td>
                 </tr>
                 <tr>
                     <td>Hash (md5)</td>
-                    <td>{{ summary.msg_hash }}</td>
+                    <td>{{ result_file_info.msg_hash }}</td>
                 </tr>
                 <tr>
                     <td>Download</td>

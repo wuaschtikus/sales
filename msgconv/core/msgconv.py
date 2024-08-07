@@ -5,68 +5,8 @@ from django.conf import settings
 from asn1crypto import cms, pem
 from email.message import EmailMessage
 from email import policy
-from email.parser import BytesParser, Parser
-from urllib.parse import urljoin
+from email.parser import BytesParser
 from mimetypes import guess_type
-
-def msg_convert_msg_to_eml(msg_file_path, eml_file_path):
-    """
-    Converts a .msg email file to an .eml file format.
-
-    Args:
-        msg_file_path (str): The path to the .msg email file that needs to be converted.
-        eml_file_path (str): The path where the resulting .eml file will be saved.
-
-    Returns:
-        str: The file path of the saved .eml file.
-
-    Description:
-        This function loads a .msg email file and converts it into an .eml file format. It transfers
-        the subject, sender, recipients, date, and body from the .msg file to an EmailMessage object.
-        It also handles any attachments, adding them to the EmailMessage object. The function then
-        writes the EmailMessage object to the specified .eml file path.
-
-    Example:
-        msg_file = '/path/to/email.msg'
-        eml_file = '/path/to/output/email.eml'
-        converted_file_path = msg_convert_msg_to_eml(msg_file, eml_file)
-        print(f"EML file saved at: {converted_file_path}")
-
-    Notes:
-        - The function assumes the .msg file is properly formatted and that all necessary attributes
-          (like subject, sender, recipients, etc.) are present.
-        - Attachments are added to the .eml file as octet-streams with their original filenames.
-    """
-    # Load the .msg file
-    msg = extract_msg.Message(msg_file_path)
-    
-    # Create an EmailMessage object
-    email_message = EmailMessage()
-    
-    # Set the subject, from, to, date
-    email_message['Subject'] = msg.subject
-    email_message['From'] = msg.sender
-    email_message['To'] = msg.recipients
-    email_message['Date'] = msg.date
-    
-    # Set the body of the email
-    if msg.body is not None:
-        email_message.set_content(msg.body)
-    
-    # Handle attachments
-    for attachment in msg.attachments:
-        email_message.add_attachment(
-            attachment.data,
-            maintype='application',
-            subtype='octet-stream',
-            filename=attachment.longFilename
-        )
-    
-    # Save the email message as an .eml file
-    with open(eml_file_path, 'wb') as eml_file:
-        eml_file.write(email_message.as_bytes())
-    
-    return eml_file_path
 
 def msg_convert_msg_to_eml_with_signed(msg_file_path, eml_file_path, msg_attachments_path, additional_attachments=None):
     """
@@ -89,9 +29,9 @@ def msg_convert_msg_to_eml_with_signed(msg_file_path, eml_file_path, msg_attachm
     # Set the subject, from, to, date
     email_message['Subject'] = msg.subject
     email_message['From'] = msg.sender
-    # email_message['To'] = ', '.join(msg.recipients)  # Convert list to comma-separated string
     email_message['Date'] = msg.date
-    
+    email_message['To'] = msg.recipients 
+
     # Set the body of the email
     if msg.body is not None:
         email_message.set_content(msg.body)

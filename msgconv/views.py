@@ -25,6 +25,9 @@ class ConverterView(View):
 class MsgConv(View):
     template_name = 'msgconv/msgconv.html'
     
+    # Define the maximum upload size (10MB)
+    MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB in bytes
+        
     # Folder structure
     tmp = str(uuid.uuid4())
     tmp_dir = os.path.join(settings.MEDIA_ROOT, tmp)
@@ -39,58 +42,32 @@ class MsgConv(View):
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        
         form = MyFileUploadForm(request.POST, request.FILES)
         
         if form.is_valid():
-            # create folder structure
+            self.uploaded_file = request.FILES['file']
+            self.uploaded_file_size_readable = self._get_readable_file_size(request.FILES['file'].size)
+            self.uploaded_file_name = request.FILES['file'].name
+            
+            # Create folder structure
             self._create_temp_dirs()
             
-            uploaded_file = request.FILES['file']
-            logger.info(f'Uploaded file {uploaded_file.name}')
+            logger.info(f'Uploaded file {self.uploaded_file_name} size {self.uploaded_file_size_readable} directory {self.tmp_dir}')
             
-            # Write the file to disk
-            msg_path = self._write_to_disc(uploaded_file, os.path.join(self.tmp_dir_msg, uploaded_file.name))
-            logger.info(f'File {uploaded_file.name} written to disk at {msg_path}')
+            # Check file size limit
+            if self.uploaded_file.size > self.MAX_UPLOAD_SIZE:
+                logger.info('File size exceeded for file ')
+                form.add_error(None, f"File size exceeds the 10MB limit. Your file is {self.uploaded_file_size_readable}.")
+                return render(request, self.template_name, {'form': form})
             
-            # Extract attachments (also signed attachments)
-            attachments_download_path = msg_extract_attachments(msg_path, self.tmp_dir_attachments, self.tmp_dir_download_attachments) 
-            attachments_download_paths = [d['download_path'] for d in attachments_download_path]
+            # Processing msg file 
+            result = self._process_file()
+            result_file_info = msg_extract_info(self.msg_path)
+            result['result_file_info'] = result_file_info
             
-            # Convert the file to EML format
-            eml_path = os.path.join(self.tmp_dir_eml, uploaded_file.name.replace('msg', 'eml'))
-            eml_path = self._convert_to_eml(msg_path, eml_path, self.tmp_dir_attachments, attachments_download_paths)
-            logger.info(f'Converted file {uploaded_file.name} to EML at {eml_path}')
+            self._cleanup()
             
-            # Get readable file size
-            file_size = self._get_readable_file_size(uploaded_file.size)
-            
-            # Generate download URL for the EML file
-            eml_filename = os.path.basename(eml_path)
-            eml_download_url = os.path.join(self.tmp_dir_download_eml, eml_filename)
-            
-            # Extract summary information from the message
-            summary = msg_extract_info(msg_path)
-            
-            # Delete the original MSG file if it exists
-            if os.path.exists(msg_path):
-                os.remove(msg_path)
-                logger.info(f'{msg_path} has been deleted successfully.')
-            else:
-                logger.warning(f'The file {msg_path} does not exist.')
-            
-            # Render the template with the necessary context
-            context = {
-                'file_name': uploaded_file.name,
-                'file_name_download': uploaded_file.name.replace('msg', 'eml'),
-                'eml_download_url': eml_download_url,
-                'file_size': file_size,
-                'attachments_download_paths': attachments_download_path,
-                'attachments_count': str(len(attachments_download_path)),
-                'id': self.tmp, 
-                'summary': summary
-            }
-            return render(request, self.template_name, context)
+            return render(request, self.template_name, result)
         
         return render(request, self.template_name, {'form': form})
     
@@ -99,14 +76,52 @@ class MsgConv(View):
         os.makedirs(os.path.join(self.tmp_dir, 'msg'), exist_ok=True)
         os.makedirs(self.tmp_dir_eml, exist_ok=True)
 
-    
     def _write_to_disc(self, uploaded_file, save_path):        
-        # Write the uploaded file to disk
         with open(save_path, 'wb') as f:
             for chunk in uploaded_file.chunks():
                 f.write(chunk)
                 
         return save_path
+    
+    def _cleanup(self):
+        # Delete the original MSG file if it exists
+        if os.path.exists(self.msg_path):
+            os.remove(self.msg_path)
+            logger.info(f'{self.msg_path} has been deleted successfully.')
+        else:
+            logger.warning(f'The file {self.msg_path} does not exist.')
+    
+    def _process_file(self):
+        # Write the file to disk
+        self.msg_path = self._write_to_disc(self.uploaded_file, os.path.join(self.tmp_dir_msg, self.uploaded_file.name))
+        
+        logger.info(f'File {self.uploaded_file.name} written to disk at {self.msg_path}')
+        
+        # Extract attachments (also signed attachments)
+        self.attachments_download_path = msg_extract_attachments(self.msg_path, self.tmp_dir_attachments, self.tmp_dir_download_attachments) 
+        self.attachments_download_paths = [d['download_path'] for d in self.attachments_download_path]
+        
+        # Convert the file to EML format
+        eml_path = os.path.join(self.tmp_dir_eml, self.uploaded_file.name.replace('msg', 'eml'))
+        eml_path = self._convert_to_eml(self.msg_path, eml_path, self.tmp_dir_attachments, self.attachments_download_paths)
+        
+        logger.info(f'Converted file {self.uploaded_file.name} to EML at {eml_path}')
+        
+        # Get readable file size
+        file_size = self._get_readable_file_size(self.uploaded_file.size)
+        
+        # Generate download URL for the EML file
+        eml_filename = os.path.basename(eml_path)
+        eml_download_url = os.path.join(self.tmp_dir_download_eml, eml_filename)
+        
+        return {
+            'file_name': self.uploaded_file.name,
+            'file_name_download': self.uploaded_file.name.replace('msg', 'eml'),
+            'eml_download_url': eml_download_url,
+            'file_size': file_size,
+            'attachments_download_paths': self.attachments_download_path,
+            'attachments_count': str(len(self.attachments_download_path)),
+        }
     
     def _convert_to_eml(self, msg_path, eml_path, msg_attachments_path, attachments):
         eml = msg_convert_msg_to_eml_with_signed(msg_path, eml_path, msg_attachments_path, attachments)
@@ -155,11 +170,9 @@ class DeleteFiles(View):
                 for filename in os.listdir(subdirectory_path):
                     file_path = os.path.join(subdirectory_path, filename)
                     if os.path.isfile(file_path):
-                        print(file_path)
                         file_size = os.path.getsize(file_path)
                         file_info.append({'name': filename, 'size': file_size})
 
-        print('fileinfos ' + str(file_info))
         return file_info
         
         
