@@ -10,23 +10,27 @@
 
 <section>
     <div class="box ml-6 mr-6">
-        <h1>Delete Files</h1>
         <div class="field">
             <label class="label">Do you really want to purge all your files from the server?</label>
         </div>
         <div>
-            <table>
-            {% for file in file_infos %}
-                <tr>
-                    <td>{{ file.name }}</td>
-                    <td>{{ file.size }}</td>
-                </tr>
-            {% endfor %}
+            <table class="table is-borderless">
+                <tbody>
+                    {% for file in file_infos %}
+                        <tr>
+                            <td>{{ file.name }}</td>
+                            <td>{{ file.size }}</td>
+                        </tr>
+                    {% endfor %}
+                <tbody>
             </table>
-            <form method="post" class="mt-4" action="{% url 'delete_files' %}">
-                <button type="submit" class="button">No, not yet.</button>
-                <button type="submit" class="button is-danger">Yes, delete all my files!<button>
-            </form>
+            <div class="buttons is-inline-flex">
+                <a href="{% url 'msgconv' %}" class="button">No, not yet.</a>
+                <form method="post" class="" action="{% url 'delete_files' id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button is-danger">Yes, delete all my files!<button>
+                </form>
+            </div>
         </div>
     </div>
 </section>    

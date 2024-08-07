@@ -2,12 +2,14 @@ import os
 import logging
 import uuid
 import shutil
-from .core.msgconv import msg_extract_info, msg_extract_attachments, msg_convert_msg_to_eml_with_signed
 from .forms import MyFileUploadForm
 from django.shortcuts import render, redirect
 from django.views import View
 from django.conf import settings
 from django.http import HttpResponse
+
+from .core.msgconv import msg_extract_info, msg_extract_attachments, msg_convert_msg_to_eml_with_signed
+from sales.common_code import get_readable_file_size, list_directory
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -46,7 +48,7 @@ class MsgConv(View):
         
         if form.is_valid():
             self.uploaded_file = request.FILES['file']
-            self.uploaded_file_size_readable = self._get_readable_file_size(request.FILES['file'].size)
+            self.uploaded_file_size_readable = get_readable_file_size(request.FILES['file'].size)
             self.uploaded_file_name = request.FILES['file'].name
             
             # Create folder structure
@@ -108,13 +110,14 @@ class MsgConv(View):
         logger.info(f'Converted file {self.uploaded_file.name} to EML at {eml_path}')
         
         # Get readable file size
-        file_size = self._get_readable_file_size(self.uploaded_file.size)
+        file_size = get_readable_file_size(self.uploaded_file.size)
         
         # Generate download URL for the EML file
         eml_filename = os.path.basename(eml_path)
         eml_download_url = os.path.join(self.tmp_dir_download_eml, eml_filename)
         
         return {
+            'id': self.tmp,
             'file_name': self.uploaded_file.name,
             'file_name_download': self.uploaded_file.name.replace('msg', 'eml'),
             'eml_download_url': eml_download_url,
@@ -127,53 +130,24 @@ class MsgConv(View):
         eml = msg_convert_msg_to_eml_with_signed(msg_path, eml_path, msg_attachments_path, attachments)
         return eml
     
-    def _get_readable_file_size(self, size_in_bytes):
-        size_units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB']
-        size_index = 0
-
-        while size_in_bytes >= 1024 and size_index < len(size_units) - 1:
-            size_in_bytes /= 1024
-            size_index += 1
-
-        return f"{size_in_bytes:.2f} {size_units[size_index]}"
-    
 
 class DeleteFiles(View):
     template_name = 'msgconv/delete_files.html'
     
-    def get(self, request):
-        return render(request, self.template_name, {})
+    def get(self, request, id):
+        file_infos = list_directory(MsgConv.tmp_dir)
+        return render(request, self.template_name, {'id': id, 'file_infos': file_infos})
 
     def post(self, request):
+        file_infos = list_directory(MsgConv.tmp_dir)
+        
         if 'delete_files' in request.POST:
             delete_files_id = request.POST.get('delete_files_id')
-            
-            file_infos = self._list_directory(MsgConv.tmp_dir)
+
             # self._delete(delete_files_id)
-            print(file_infos)
             
             return render(request, self.template_name, {'file_infos': file_infos})
-        
-    def _list_directory(self, path):
-        file_info = []
-
-        if not os.path.exists(path):
-            raise ValueError(f"The provided path '{path}' does not exist.")
-        
-        if not os.path.isdir(path):
-            raise ValueError(f"The provided path '{path}' is not a directory.")
-        
-        for subdirectory in os.listdir(path):
-            subdirectory_path = os.path.join(path, subdirectory)
-            
-            if os.path.isdir(subdirectory_path):  # Check if it's a directory
-                for filename in os.listdir(subdirectory_path):
-                    file_path = os.path.join(subdirectory_path, filename)
-                    if os.path.isfile(file_path):
-                        file_size = os.path.getsize(file_path)
-                        file_info.append({'name': filename, 'size': file_size})
-
-        return file_info
+        return render(request, self.template_name, {'file_infos': file_infos})
         
         
     def _delete(self, dir_id):

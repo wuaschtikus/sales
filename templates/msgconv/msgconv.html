@@ -83,9 +83,9 @@
                     <td>Download attachments</td>
                     <td>
                     {% if attachments_download_paths %}
-                    {% for attachment in attachments_download_paths %}
-                        <a href="{{ attachment.download_path }}" class="button">{{ attachment.filename }}</a>
-                    {% endfor %}
+                        {% for attachment in attachments_download_paths %}
+                            <a href="{{ attachment.download_path }}" class="button">{{ attachment.filename }}</a>
+                        {% endfor %}
                     {% else %}
                         No attachments available
                     {% endif %}
@@ -120,14 +120,8 @@
                     <td><a href="{{ eml_download_url }}" class="button">{{ file_name_download }}</a></td>
                 </tr>
                 <tr>
-                    <form method="post" action="{% url 'delete_files' %}">
-                        {% csrf_token %}
-                        <td>Purge all files</td>
-                        <td>
-                            <input type="text" name="delete_files_id" value="{{ id }}" hidden>
-                            <button type="submit" name="delete_files" class="button is-danger">Delete</button>
-                        </td>
-                    </form>
+                    <td>Delete</td>
+                    <td><a href="{% url 'delete_files' id %}" class="button is-danger">Purge all files</a></td>
                 </tr>
             </tbody>
         </table>

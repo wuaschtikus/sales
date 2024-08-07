@@ -6,5 +6,5 @@ urlpatterns = [
     path('converter/', ConverterView.as_view(), name='converter'),
     path('msgconv/', MsgConv.as_view(), name='msgconv'),
     path('upload/', MsgConv.as_view(), name='msgupload'),
-    path('delete/', DeleteFiles.as_view(), name='delete_files'),
+    path('delete/<str:id>', DeleteFiles.as_view(), name='delete_files'),
 ]
