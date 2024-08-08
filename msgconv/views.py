@@ -2,6 +2,9 @@ import os
 import logging
 import uuid
 import shutil
+import pickle
+from pprint import pformat
+
 from .forms import MyFileUploadForm
 from django.shortcuts import render, redirect
 from django.views import View
@@ -38,9 +41,20 @@ class MsgConv(View):
     tmp_dir_eml = os.path.join(tmp_dir, 'eml')
     tmp_dir_download_eml = os.path.join(settings.MEDIA_URL, tmp, 'eml')
     tmp_dir_download_attachments = os.path.join(settings.MEDIA_URL, tmp, 'attachments')
+    tmp_dir_result_path = os.path.join(tmp_dir, 'result.pkl')
     
-    def get(self, request):
+    def get(self, request, id=None):
         form = MyFileUploadForm()
+        
+        if id:
+            # Retrieve the dictionary from disk
+            with open(os.path.join(settings.MEDIA_ROOT, id, 'result.pkl'), 'rb') as file:
+                result = pickle.load(file)
+                
+                logger.debug(f'result GET: {pformat(result)}')
+                
+            return render(request, self.template_name, {'form': form, 'result': result})
+        
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
@@ -63,13 +77,22 @@ class MsgConv(View):
                 return render(request, self.template_name, {'form': form})
             
             # Processing msg file 
-            result = self._process_file()
-            result_file_info = msg_extract_info(self.msg_path)
+            # Write the file to disk
+            msg_path = self._write_to_disc(self.uploaded_file, os.path.join(self.tmp_dir_msg, self.uploaded_file.name))
+            result = self._process_file(msg_path)
+            result_file_info = msg_extract_info(msg_path)
             result['result_file_info'] = result_file_info
             
-            self._cleanup()
+            logger.debug(f'result: {pformat(result)}')
             
-            return render(request, self.template_name, result)
+            # Store result in a file
+            # Write the dictionary to disk
+            with open(self.tmp_dir_result_path, 'wb') as file:
+                pickle.dump(result, file)
+            
+            self._cleanup(msg_path)
+            
+            return render(request, self.template_name, {'result': result})
         
         return render(request, self.template_name, {'form': form})
     
@@ -85,29 +108,26 @@ class MsgConv(View):
                 
         return save_path
     
-    def _cleanup(self):
+    def _cleanup(self, msg_path):
         # Delete the original MSG file if it exists
-        if os.path.exists(self.msg_path):
-            os.remove(self.msg_path)
-            logger.info(f'{self.msg_path} has been deleted successfully.')
+        if os.path.exists(msg_path):
+            os.remove(msg_path)
+            logger.info(f'{msg_path} has been deleted successfully.')
         else:
-            logger.warning(f'The file {self.msg_path} does not exist.')
+            logger.warning(f'The file {msg_path} does not exist.')
     
-    def _process_file(self):
-        # Write the file to disk
-        self.msg_path = self._write_to_disc(self.uploaded_file, os.path.join(self.tmp_dir_msg, self.uploaded_file.name))
-        
-        logger.info(f'File {self.uploaded_file.name} written to disk at {self.msg_path}')
+    def _process_file(self, msg_path):
+        logger.info(f'File written to disk at {msg_path}')
         
         # Extract attachments (also signed attachments)
-        self.attachments_download_path = msg_extract_attachments(self.msg_path, self.tmp_dir_attachments, self.tmp_dir_download_attachments) 
+        self.attachments_download_path = msg_extract_attachments(msg_path, self.tmp_dir_attachments, self.tmp_dir_download_attachments) 
         self.attachments_download_paths = [d['download_path'] for d in self.attachments_download_path]
         
         # Convert the file to EML format
         eml_path = os.path.join(self.tmp_dir_eml, self.uploaded_file.name.replace('msg', 'eml'))
-        eml_path = self._convert_to_eml(self.msg_path, eml_path, self.tmp_dir_attachments, self.attachments_download_paths)
+        eml_path = self._convert_to_eml(msg_path, eml_path, self.tmp_dir_attachments, self.attachments_download_paths)
         
-        logger.info(f'Converted file {self.uploaded_file.name} to EML at {eml_path}')
+        logger.info(f'Converted file {msg_path} to EML at {eml_path}')
         
         # Get readable file size
         file_size = get_readable_file_size(self.uploaded_file.size)
@@ -134,20 +154,18 @@ class MsgConv(View):
 class DeleteFiles(View):
     template_name = 'msgconv/delete_files.html'
     
-    def get(self, request, id):
-        file_infos = list_directory(MsgConv.tmp_dir)
+    def get(self, request, id=None):
+        file_infos = list_directory(os.path.join(settings.MEDIA_ROOT, id))
         return render(request, self.template_name, {'id': id, 'file_infos': file_infos})
 
-    def post(self, request):
-        file_infos = list_directory(MsgConv.tmp_dir)
+    def post(self, request, id=None):
+        file_infos = list_directory(os.path.join(settings.MEDIA_ROOT, id))
         
-        if 'delete_files' in request.POST:
-            delete_files_id = request.POST.get('delete_files_id')
-
-            # self._delete(delete_files_id)
-            
-            return render(request, self.template_name, {'file_infos': file_infos})
-        return render(request, self.template_name, {'file_infos': file_infos})
+        if id:
+            self._delete(id)
+            return redirect('msgconv')
+        
+        return render(request, self.template_name, {'id': id, 'file_infos': file_infos})
         
         
     def _delete(self, dir_id):

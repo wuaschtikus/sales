@@ -56,7 +56,7 @@
     </div>
 </section>
 
-{% if eml_download_url %}
+{% if result.eml_download_url %}
 <section class="pb-2 pt-2">
     <div class="pl-5">
         <h3 class="title">Result</h3>
@@ -69,21 +69,21 @@
             <tbody>
                 <tr>
                     <td>Filesize</td>
-                    <td>{{ file_size }}</td>
+                    <td>{{ result.file_size }}</td>
                 </tr>
                 <tr>
                     <td>Subject</td>
-                    <td>{{ result_file_info.subject }}</td>
+                    <td>{{ result.result_file_info.subject }}</td>
                 </tr>
                 <tr>
                     <td>Attachments found</td>
-                    <td>{{ attachments_count }}</td>
+                    <td>{{ result.attachments_count }}</td>
                 </tr>
                 <tr>
                     <td>Download attachments</td>
                     <td>
-                    {% if attachments_download_paths %}
-                        {% for attachment in attachments_download_paths %}
+                    {% if result.attachments_download_paths %}
+                        {% for attachment in result.attachments_download_paths %}
                             <a href="{{ attachment.download_path }}" class="button">{{ attachment.filename }}</a>
                         {% endfor %}
                     {% else %}
@@ -93,7 +93,7 @@
                 </tr>
                 <tr>
                     <td>Mail was sent</td>
-                    <td>{% if result_file_info.is_sent %}
+                    <td>{% if result.result_file_info.is_sent %}
                         Yes
                     {% else %}
                         No
@@ -101,27 +101,27 @@
                 </tr>
                 <tr>
                     <td>Date sent</td>
-                    <td>{{ result_file_info.message_date }}</td>
+                    <td>{{ result.result_file_info.message_date }}</td>
                 </tr>
                 <tr>
                     <td>Recieved by server</td>
-                    <td>{{ result_file_info.received_by_server_date}}</td>
+                    <td>{{ result.result_file_info.received_by_server_date}}</td>
                 </tr>
                 <tr>
                     <td>Email Addresses</td>
-                    <td>{{ result_file_info.email_addresses }}</td>
+                    <td>{{ result.result_file_info.email_addresses }}</td>
                 </tr>
                 <tr>
                     <td>Hash (md5)</td>
-                    <td>{{ result_file_info.msg_hash }}</td>
+                    <td>{{ result.result_file_info.msg_hash }}</td>
                 </tr>
                 <tr>
                     <td>Download</td>
-                    <td><a href="{{ eml_download_url }}" class="button">{{ file_name_download }}</a></td>
+                    <td><a href="{{ eml_download_url }}" class="button">{{ result.file_name_download }}</a></td>
                 </tr>
                 <tr>
                     <td>Delete</td>
-                    <td><a href="{% url 'delete_files' id %}" class="button is-danger">Purge all files</a></td>
+                    <td><a href="{% url 'delete_files' result.id %}" class="button is-danger">Purge all files</a></td>
                 </tr>
             </tbody>
         </table>

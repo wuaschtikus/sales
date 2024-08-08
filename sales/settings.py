@@ -96,22 +96,6 @@ SOCIALACCOUNT_PROVIDERS = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Directory paths - Relative
-# required for download links
-EML_FILES_DIR_REL = os.path.join(MEDIA_URL, 'eml_files')
-MSG_FILES_DIR_REL = os.path.join(MEDIA_URL, 'msg_files')
-MSG_ATTACHMENTS_DIR_REL = os.path.join(MEDIA_URL, 'msg_attachments_extracted')
-
-# Directory paths - Ansolute 
-EML_FILES_DIR = os.path.join(MEDIA_ROOT, 'eml_files')
-MSG_FILES_DIR = os.path.join(MEDIA_ROOT, 'msg_files')
-MSG_ATTACHMENTS_DIR = os.path.join(MEDIA_ROOT, 'msg_attachments_extracted')
-
-# Create directories if they do not exist
-os.makedirs(EML_FILES_DIR, exist_ok=True)
-os.makedirs(MSG_FILES_DIR, exist_ok=True)
-os.makedirs(MSG_ATTACHMENTS_DIR, exist_ok=True)
-
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
@@ -258,7 +242,7 @@ LOGGING = {
             'formatter': 'verbose',
         },
         'console': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
@@ -266,7 +250,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['file', 'console'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': True,
         },
         'django.request': {
