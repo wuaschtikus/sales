@@ -35,3 +35,4 @@ sqlparse==0.5.1
 typing_extensions==4.12.2
 tzlocal==5.2
 urllib3==2.2.2
+gunicorn

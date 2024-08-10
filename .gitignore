@@ -51,6 +51,7 @@ coverage.xml
 docs/_build/
 
 .env
+.env-prod
 venv 
 media/*
 
