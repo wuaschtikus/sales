@@ -1,11 +1,13 @@
 from django.urls import path
-from .views import MsgConv, IndexView, ConverterView, DeleteFiles
+from .views import IndexView, ConverterView, DeleteFiles, MsgConvMultipleFiles, MsgConvSingleFiles
 
 urlpatterns = [
     path('index/', IndexView.as_view(), name='index'),
     path('converter/', ConverterView.as_view(), name='converter'),
-    path('msgconv/', MsgConv.as_view(), name='msgconv'),
-    path('msgconv/<str:id>', MsgConv.as_view(), name='msgconv'),
-    path('upload/', MsgConv.as_view(), name='msgupload'),
+    path('msgconv/single', MsgConvSingleFiles.as_view(), name='msgconv_single_files'),
+    path('msgconv/single/<str:id>', MsgConvSingleFiles.as_view(), name='msgconv_single_files'),
+    path('msgconv/multiple', MsgConvMultipleFiles.as_view(), name='msgconv_multiple_files'),
+    path('msgconv/multiple/<str:id>', MsgConvMultipleFiles.as_view(), name='msgconv_multiple_files'),
+    path('upload/', MsgConvSingleFiles.as_view(), name='msgupload'),
     path('delete/<str:id>', DeleteFiles.as_view(), name='delete_files'),
 ]

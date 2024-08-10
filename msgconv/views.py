@@ -26,13 +26,33 @@ class ConverterView(View):
     template_name = 'msgconv/converter.html'
     def get(self, request):
         return render(request, self.template_name)
-
-class MsgConv(View):
-    template_name = 'msgconv/msgconv.html'
     
+    
+class MsgConvBase(View):
     # Define the maximum upload size (10MB)
     MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB in bytes
+    
+    
+class MsgConvMultipleFiles(MsgConvBase):
+    template_name = 'msgconv/msgconv_multiple_files.html'
+    
+    def get(self, request, id=None):
+        form = MyFileUploadForm()
         
+        if id:
+            # Retrieve the dictionary from disk
+            with open(os.path.join(settings.MEDIA_ROOT, id, 'result.pkl'), 'rb') as file:
+                result = pickle.load(file)
+                
+                logger.debug(f'result GET: {pformat(result)}')
+                
+            return render(request, self.template_name, {'form': form, 'result': result})
+        
+        return render(request, self.template_name, {'form': form})
+
+class MsgConvSingleFiles(MsgConvBase):
+    template_name = 'msgconv/msgconv_single_files.html'
+    
     # Folder structure
     tmp = str(uuid.uuid4())
     tmp_dir = os.path.join(settings.MEDIA_ROOT, tmp)
@@ -59,7 +79,16 @@ class MsgConv(View):
 
     def post(self, request):
         form = MyFileUploadForm(request.POST, request.FILES)
+        action = request.POST.get('action')
         
+        if action == 'single_file':
+            return self._process_single_file(request, form)
+        elif action == 'multiple_files':
+            return self._process_multiple_files(request, form)
+        else:
+            return render(request, self.template_name, {'form': form})
+        
+    def _process_multiple_files(self, request, form):
         if form.is_valid():
             self.uploaded_file = request.FILES['file']
             self.uploaded_file_size_readable = get_readable_file_size(request.FILES['file'].size)
@@ -95,6 +124,44 @@ class MsgConv(View):
             return render(request, self.template_name, {'result': result})
         
         return render(request, self.template_name, {'form': form})
+    
+    def _process_single_file(self, request, form):
+        if form.is_valid():
+            self.uploaded_file = request.FILES['file']
+            self.uploaded_file_size_readable = get_readable_file_size(request.FILES['file'].size)
+            self.uploaded_file_name = request.FILES['file'].name
+            
+            # Create folder structure
+            self._create_temp_dirs()
+            
+            logger.info(f'Uploaded file {self.uploaded_file_name} size {self.uploaded_file_size_readable} directory {self.tmp_dir}')
+            
+            # Check file size limit
+            if self.uploaded_file.size > self.MAX_UPLOAD_SIZE:
+                logger.info('File size exceeded for file ')
+                form.add_error(None, f"File size exceeds the 10MB limit. Your file is {self.uploaded_file_size_readable}.")
+                return render(request, self.template_name, {'form': form})
+            
+            # Processing msg file 
+            # Write the file to disk
+            msg_path = self._write_to_disc(self.uploaded_file, os.path.join(self.tmp_dir_msg, self.uploaded_file.name))
+            result = self._process_file(msg_path)
+            result_file_info = msg_extract_info(msg_path)
+            result['result_file_info'] = result_file_info
+            
+            logger.debug(f'result: {pformat(result)}')
+            
+            # Store result in a file
+            # Write the dictionary to disk
+            with open(self.tmp_dir_result_path, 'wb') as file:
+                pickle.dump(result, file)
+            
+            self._cleanup(msg_path)
+            
+            return render(request, self.template_name, {'result': result})
+        
+        return render(request, self.template_name, {'form': form})
+        
     
     def _create_temp_dirs(self):
         os.makedirs(self.tmp_dir_attachments, exist_ok=True)
@@ -149,7 +216,7 @@ class MsgConv(View):
     def _convert_to_eml(self, msg_path, eml_path, msg_attachments_path, attachments):
         eml = msg_convert_msg_to_eml_with_signed(msg_path, eml_path, msg_attachments_path, attachments)
         return eml
-    
+
 
 class DeleteFiles(View):
     template_name = 'msgconv/delete_files.html'
