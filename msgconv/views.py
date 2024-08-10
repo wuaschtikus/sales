@@ -227,7 +227,7 @@ class DeleteFiles(View):
         
         if id:
             self._delete(id)
-            return redirect('msgconv')
+            return redirect('msgconv_single_files')
         
         return render(request, self.template_name, {'id': id, 'file_infos': file_infos})
         
