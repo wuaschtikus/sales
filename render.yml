@@ -1,0 +1,21 @@
+databases:
+  - name: sales-render
+    plan: free
+    databaseName: sales_render
+    user: sales_render_user
+
+services:
+  - type: web
+    plan: free
+    name: sales
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "python -m gunicorn mysite.asgi:application -k uvicorn.workers.UvicornWorker"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sales-render
+          property: connectionString
+      - key: DEBUG
+        value: false
+    

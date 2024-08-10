@@ -160,6 +160,7 @@ if DEBUG:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
 else:
     database_url = dj_database_url.parse(os.environ.get('DATABASE_URL'))
     DATABASES = {
