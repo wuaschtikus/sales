@@ -7,6 +7,7 @@ charset-normalizer==3.3.2
 colorclass==2.2.2
 compressed_rtf==1.0.6
 cryptography==43.0.0
+dj-database-url==2.2.0
 Django==5.0.7
 django-allauth==64.0.0
 django-crispy-forms==2.3
@@ -31,5 +32,6 @@ requests-oauthlib==2.0.0
 RTFDE==0.1.2
 soupsieve==2.5
 sqlparse==0.5.1
+typing_extensions==4.12.2
 tzlocal==5.2
 urllib3==2.2.2

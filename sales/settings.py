@@ -14,6 +14,7 @@ https://python.plainenglish.io/proper-way-of-using-google-authentication-with-dj
 """
 
 import os
+import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -160,16 +161,9 @@ if DEBUG:
         }
     }
 else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': SALES_DATABASE_NAME,
-            'USER': SALES_DATABASE_USER,
-            'PASSWORD': SALES_DATABASE_PASSSWORD,
-            'HOST': 'db',  # This matches the service name defined in docker-compose.yml
-            'PORT': '5432',
-        }
-    }
+    DATABASES = []
+    database_url = os.environ.get('DATABASE_URL')
+    DATABASES['default'] = dj_database_url.parse(database_url)
 
 
 # Password validation
