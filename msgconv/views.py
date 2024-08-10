@@ -31,18 +31,17 @@ class ConverterView(View):
 class MsgConvBase(View):
     
     MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10MB
-    
-    # Folder structure
-    tmp = str(uuid.uuid4())
-    tmp_dir = os.path.join(settings.MEDIA_ROOT, tmp)
-    tmp_dir_attachments = os.path.join(tmp_dir, 'attachments')
-    tmp_dir_msg = os.path.join(tmp_dir, 'msg')
-    tmp_dir_eml = os.path.join(tmp_dir, 'eml')
-    tmp_dir_download_eml = os.path.join(settings.MEDIA_URL, tmp, 'eml')
-    tmp_dir_download_attachments = os.path.join(settings.MEDIA_URL, tmp, 'attachments')
-    tmp_dir_result_path = os.path.join(tmp_dir, 'result.pkl')
-    
+
     def _create_temp_dirs(self):
+        self.tmp = str(uuid.uuid4())
+        self.tmp_dir = os.path.join(settings.MEDIA_ROOT, self.tmp)
+        self.tmp_dir_attachments = os.path.join(self.tmp_dir, 'attachments')
+        self.tmp_dir_msg = os.path.join(self.tmp_dir, 'msg')
+        self.tmp_dir_eml = os.path.join(self.tmp_dir, 'eml')
+        self.tmp_dir_download_eml = os.path.join(settings.MEDIA_URL, self.tmp, 'eml')
+        self.tmp_dir_download_attachments = os.path.join(settings.MEDIA_URL, self.tmp, 'attachments')
+        self.tmp_dir_result_path = os.path.join(self.tmp_dir, 'result.pkl')
+        
         os.makedirs(self.tmp_dir_attachments, exist_ok=True)
         os.makedirs(os.path.join(self.tmp_dir, 'msg'), exist_ok=True)
         os.makedirs(self.tmp_dir_eml, exist_ok=True)
@@ -75,6 +74,8 @@ class MsgConvBase(View):
                 return render(request, self.template_name, {'form': form})
             
             # Create folder structure
+            # Generate a new directory id 
+            self.tmp = str(uuid.uuid4())
             self._create_temp_dirs()
                         
             # Processing msg file 
@@ -153,18 +154,17 @@ class MsgConvMultipleFiles(MsgConvBase):
         return render(request, self.template_name, {'form': form})
     
     def post(self, request):
-        print('post')
         form = MultipleFileUploadForm(request.POST, request.FILES)
         return self._process_multiple_files(request, form)
     
     def _process_multiple_files(self, request, form):
-        print(str(request.FILES))
         if form.is_valid():
             results = []
             
             # Create folder structure
+            self.tmp = str(uuid.uuid4())
             self._create_temp_dirs()
-            print('form is valid' + str(request.FILES))
+            
             for uploaded_file in request.FILES.getlist('file'):
                 print(uploaded_file)
                 # Processing msg file 
@@ -173,10 +173,7 @@ class MsgConvMultipleFiles(MsgConvBase):
                 logger.info(f'Uploaded file {uploaded_file.name} size {get_readable_file_size(uploaded_file.size)} directory {self.tmp_dir}')
                 
                 result = self._process_file(msg_path, uploaded_file)
-                print(result)
                 result_file_info = msg_extract_info(msg_path)
-                print(msg_path)
-                print(result_file_info)
                 result['result_file_info'] = result_file_info
                 results.append(result)
                 logger.debug(f'result: {pformat(results)}')
@@ -234,7 +231,6 @@ class DeleteFiles(View):
         
         return render(request, self.template_name, {'id': id, 'file_infos': file_infos})
         
-        
     def _delete(self, dir_id):
         try:
             tmp_dir = os.path.join(settings.MEDIA_ROOT, dir_id)
@@ -242,7 +238,7 @@ class DeleteFiles(View):
                 shutil.rmtree(tmp_dir)
                 logger.info(f'Deleted temporary directory {tmp_dir}')
             else:
-                logger.warning(f'No temporary directory found for ID {self.dir_id}')
+                logger.warning(f'No temporary directory found for ID {dir_id}')
             return redirect('msgconv')  # Redirect to a success page
         except Exception as e:
             logger.error(f'Error deleting files: {e}')

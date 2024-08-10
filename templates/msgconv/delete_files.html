@@ -25,7 +25,7 @@
                 <tbody>
             </table>
             <div class="buttons is-inline-flex">
-                <a href="{% url 'msgconv' id %}" class="button">No, not yet.</a>
+                <button onClick="javascript:history.go(-1);" class="button">No, not yet.</button>
                 <form method="post" class="" action="{% url 'delete_files' id %}">
                     {% csrf_token %}
                     <button type="submit" class="button is-danger">Yes, delete all my files!<button>
