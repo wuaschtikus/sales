@@ -1,6 +1,7 @@
 asgiref==3.8.1
 asn1crypto==1.5.1
 beautifulsoup4==4.12.3
+Brotli==1.1.0
 certifi==2024.7.4
 cffi==1.16.0
 charset-normalizer==3.3.2
@@ -35,4 +36,4 @@ sqlparse==0.5.1
 typing_extensions==4.12.2
 tzlocal==5.2
 urllib3==2.2.2
-gunicorn
+whitenoise==6.7.0
