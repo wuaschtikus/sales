@@ -20,13 +20,22 @@ from dotenv import load_dotenv
 
 load_dotenv()
     
-# get secrest keys
+# Google OICD
 GOOGLE_AUTH_CLIENT_ID=os.getenv('GOOGLE_AUTH_CLIENT_ID')
 GOOGLE_AUTH_CLIENT_SECRET=os.getenv('GOOGLE_AUTH_CLIENT_SECRET')
 GOOGLE_AUTH_CLIENT_KEY=os.getenv('GOOGLE_AUTH_CLIENT_KEY')
-SALES_DATABASE_NAME=os.getenv('SALES_DATABASE_NAME')
-SALES_DATABASE_USER=os.getenv('SALES_DATABASE_USER')
-SALES_DATABASE_PASSSWORD=os.getenv('SALES_DATABASE_PASSWORD')
+
+# Github OIDC
+GITHUB_AUTH_CLIENT_ID=os.getenv('GITHUB_AUTH_CLIENT_ID')
+GITHUB_AUTH_CLIENT_SECRET=os.getenv('GITHUB_AUTH_CLIENT_SECRET')
+GITHUB_AUTH_CLIENT_KEY=os.getenv('GITHUB_AUTH_CLIENT_KEY')
+
+# Email Settings
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,7 +47,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback_secret_key')
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
-
 
 # Application definition
 
@@ -57,6 +65,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.facebook',
     # required for allauth user sessions 
     'django.contrib.humanize',
     'allauth.usersessions',
@@ -93,8 +103,26 @@ SOCIALACCOUNT_PROVIDERS = {
             'profile',
             'email',
         ]
+    }, 
+    'github': {
+        'APP': {
+            'client_id': GITHUB_AUTH_CLIENT_ID,
+            'secret': GITHUB_AUTH_CLIENT_SECRET,
+            'key': GITHUB_AUTH_CLIENT_KEY
+        },
+        'SCOPE': [
+            'user',
+        ],
+    },
+    'facebook': {
+        'METHOD': 'oauth2',  # Set to 'js_sdk' to use the Facebook connect SDK
+        'SDK_URL': '//connect.facebook.net/{locale}/sdk.js',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
     }
 }
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

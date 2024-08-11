@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% load account socialaccount %}
+{% providers_media_js %}
 {% block content %}
 
 <section class="section">
@@ -46,11 +47,11 @@
                             <span class="has-text-grey-dark">Sign in with Google</span>
                         </a>
 
-                        <a class="button is-white mb-2 is-flex is-justify-content-center is-align-items-center is-fullwidth" href="#">
+                        <a class="button is-white mb-2 is-flex is-justify-content-center is-align-items-center is-fullwidth" href="{% provider_login_url 'github' %}">
                             <div class="mr-2">
-                                <i class="fab fa-facebook"></i>
+                                <i class="fab fa-github"></i>
                             </div>
-                            <span class="has-text-grey-dark">Sign in with Facebook</span>
+                            <span class="has-text-grey-dark">Sign in with Github</span>
                         </a>
                     </form>
 
