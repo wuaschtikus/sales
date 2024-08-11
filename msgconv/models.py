@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib import admin
+
 
 User = get_user_model()
 
@@ -12,3 +14,6 @@ class ConvertedFiles(models.Model):
     
     def __str__(self):
         return f'{self.user.username} - {self.id_value}'
+    
+    
+admin.site.register(ConvertedFiles)

@@ -86,7 +86,7 @@
 
 {% if result.eml_download_url %}
 
-    <div class="pl-5">
+    <div class="pl-5 is-flex is-justify-content-space-between is-align-items-center">
         <h3 class="title">Result</h3>
     </div>
 
@@ -105,9 +105,24 @@
         </table>
     </div>
 
-    <div class="pl-5">
-        <h3 class="title">Summary</h3>
+    <div class="pl-5 pr-6 is-flex is-justify-content-space-between is-align-items-center">
+        <h3 class="title">Result</h3>
+        <div class="buttons">
+            <a href="{{ result.result_file_summaries.txt }}" class="button">
+                <span class="icon"><i class="fas fa-file-alt"></i></span>
+                <span>Summary.txt</span>
+            </a>
+            <a href="{{ result.result_file_summaries.json }}" class="button pr-2">
+                <span class="icon"><i class="fas fa-file-code"></i></span>
+                <span>Summary.json</span>
+            </a>
+            <a href="{{ result.result_file_summaries.csv }}" class="button pr-2">
+                <span class="icon"><i class="fas fa-file-csv"></i></span>
+                <span>Summary.csv</span>
+            </a>
+        </div>
     </div>
+
 
     <div class="box ml-6 mr-6">
         <table class="table is-borderless">

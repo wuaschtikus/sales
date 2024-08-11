@@ -3,6 +3,9 @@ import os
 import uuid
 import pickle
 import logging
+import json
+import csv
+import pprint
 
 from pprint import pformat
 from django.conf import settings
@@ -32,7 +35,10 @@ class MsgConvBase(View):
         self.tmp_dir_eml = os.path.join(self.tmp_dir, 'eml')
         self.tmp_dir_download_eml = os.path.join(settings.MEDIA_URL, self.tmp, 'eml')
         self.tmp_dir_download_attachments = os.path.join(settings.MEDIA_URL, self.tmp, 'attachments')
-        self.tmp_dir_result_path = os.path.join(self.tmp_dir, 'result.pkl')
+        self.tmp_dir_result_path_pkl = os.path.join(self.tmp_dir, 'result.pkl')
+        self.tmp_dir_result_path_txt = os.path.join(self.tmp_dir, 'result.txt')
+        self.tmp_dir_result_path_csv = os.path.join(self.tmp_dir, 'result.csv')
+        self.tmp_dir_result_path_json = os.path.join(self.tmp_dir, 'result.json')
         
         os.makedirs(self.tmp_dir_attachments, exist_ok=True)
         os.makedirs(os.path.join(self.tmp_dir, 'msg'), exist_ok=True)
@@ -76,21 +82,43 @@ class MsgConvBase(View):
             logger.info(f'Uploaded file {self.uploaded_file_name} size {self.uploaded_file_size_readable} directory {self.tmp_dir}')
 
             result = self._process_file(msg_path, uploaded_file)
-            result_file_info = msg_extract_info(msg_path)
-            result['result_file_info'] = result_file_info
+            result['result_file_info'] = msg_extract_info(msg_path)
+            result['result_file_summaries'] = self._msg_create_summaries(result)
             
             logger.debug(f'result: {pformat(result)}')
-            
-            # Store result in a file
-            # Write the dictionary to disk
-            with open(self.tmp_dir_result_path, 'wb') as file:
-                pickle.dump(result, file)
             
             self._cleanup(msg_path)
             
             return render(request, self.template_name, {'result': result})
         
         return render(request, self.template_name, {'form': form})
+    
+    def _msg_create_summaries(self, result):
+        # Store result in a file
+        # Write the dictionary to disk
+        with open(self.tmp_dir_result_path_pkl, 'wb') as file:
+            pickle.dump(result, file)
+            
+        # Write the dictionary to a text file
+        with open(self.tmp_dir_result_path_txt, 'w', encoding='utf-8') as file:
+            file.write(pprint.pformat(result, indent=4))
+            
+        # Write the dictionary to a JSON file
+        with open(self.tmp_dir_result_path_json, 'w',  encoding='utf-8') as file:
+            json.dump(result, file, indent=4, ensure_ascii=False)
+            
+        # Write the dictionary to a CSV file
+        with open(self.tmp_dir_result_path_csv, 'w', newline='',  encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(result.keys())
+            writer.writerow(result.values())
+            
+        return {
+            'txt': os.path.join(settings.MEDIA_URL, self.tmp, 'result.txt'),
+            'json': os.path.join(settings.MEDIA_URL, self.tmp, 'result.json'),
+            'csv': os.path.join(settings.MEDIA_URL, self.tmp, 'result.csv')
+        }
+        
     
     def _process_file(self, msg_path, uploaded_file):
         logger.info(f'File written to disk at {msg_path}')
@@ -175,7 +203,8 @@ class MsgConvMultipleFiles(MsgConvBase):
                 # Write the dictionary to disk
                 with open(self.tmp_dir_result_path, 'wb') as file:
                     pickle.dump(result, file)
-                    
+                  
+                  
                 self._cleanup(msg_path)
                 
                 print(str(results))
