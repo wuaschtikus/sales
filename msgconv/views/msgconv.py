@@ -14,6 +14,9 @@ from msgconv.forms import SingleFileUploadForm, MultipleFileUploadForm
 
 from sales.common_code import get_readable_file_size
 
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -127,6 +130,7 @@ class MsgConvBase(View):
 class MsgConvMultipleFiles(MsgConvBase):
     template_name = 'msgconv/msgconv_multiple_files.html'
     
+    @method_decorator(login_required)
     def get(self, request, id=None):
         form = MultipleFileUploadForm()
         
@@ -141,6 +145,7 @@ class MsgConvMultipleFiles(MsgConvBase):
         
         return render(request, self.template_name, {'form': form})
     
+    @method_decorator(login_required)
     def post(self, request):
         form = MultipleFileUploadForm(request.POST, request.FILES)
         return self._process_multiple_files(request, form)
