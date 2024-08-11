@@ -30,6 +30,11 @@ GITHUB_AUTH_CLIENT_ID=os.getenv('GITHUB_AUTH_CLIENT_ID')
 GITHUB_AUTH_CLIENT_SECRET=os.getenv('GITHUB_AUTH_CLIENT_SECRET')
 GITHUB_AUTH_CLIENT_KEY=os.getenv('GITHUB_AUTH_CLIENT_KEY')
 
+# Facebook OIDC
+FACEBOOK_AUTH_CLIENT_ID=os.getenv('FACEBOOK_AUTH_CLIENT_ID')
+FACEBOOK_AUTH_CLIENT_SECRET=os.getenv('FACEBOOK_AUTH_CLIENT_SECRET')
+FACEBOOK_AUTH_CLIENT_KEY=os.getenv('FACEBOOK_AUTH_CLIENT_KEY')
+
 # Email Settings
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
@@ -120,8 +125,29 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': ['email', 'public_profile'],
         'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
         'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name',
+        ],
+        'EXCHANGE_TOKEN': True,
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v17.0',
+        'GRAPH_API_URL': 'https://graph.facebook.com/v17.0',
+        'APP': {
+            'client_id': FACEBOOK_AUTH_CLIENT_ID,       
+            'secret': FACEBOOK_AUTH_CLIENT_SECRET,  
+            'key': FACEBOOK_AUTH_CLIENT_KEY
+        }
     }
 }
+
+# https://www.pragnakalp.com/django-facebook-authentication-elevate-your-apps-security-with-this-comprehensive-guide/
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
