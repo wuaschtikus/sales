@@ -203,6 +203,6 @@ class MsgConvSingleFiles(MsgConvBase):
 
     def post(self, request):
         form = SingleFileUploadForm(request.POST, request.FILES)
-        file = request.FILES['file']
+        file = request.FILES['file'] 
         return self._process_single_file(request, form, file)
     

@@ -15,8 +15,8 @@
                 <label class="label">Convert single .msg file to .eml</label>
                 <p>Convert MSG files, which are commonly used by Microsoft Outlook to store individual email messages, into EML files, a more universal format that is widely supported by various email clients for storing email data in a text-based format.</p>
             </div>
-            <div class="file is-medium is-boxed is-centered">
-              <label class="file-label">
+            <div class="file is-primary is-medium is-boxed is-centered">
+              <label class="file-label has-background-white">
                 <input class="file-input" type="file" name="file" id="file-input" />
                 <span class="file-cta">
                   <span class="file-icon">
@@ -32,24 +32,6 @@
                 </span>
               </label>
             </div>
-            {% comment %} <div class="file has-name has-background-white is-fullwidth">
-                <label class="file-label">
-                    <input class="file-input" type="file" name="file" id="file-input"/>
-                    <span class="file-cta">
-                        <span class="file-icon">
-                            <i class="fas fa-upload"></i>
-                        </span>
-                        <span class="file-label"> Choose a file… </span>
-                    </span>
-                    <span class="file-name" id="file-name">
-                        {% if file_name %}
-                            {{ file_name }}
-                        {% else %}
-                            No file selected
-                        {% endif %}
-                    </span>
-                </label>
-            </div> {% endcomment %}
             <button type="submit" class="button is-primary">Try for free</button>
         </form>
 

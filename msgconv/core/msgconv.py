@@ -72,43 +72,51 @@ def msg_extract_info(msg_file_path):
         dict: A dictionary containing the following extracted information:
             - "message_date" (str): The date the message was created, formatted as "Month Day, Year HH:MM AM/PM".
             - "received_by_server_date" (str): The date the message was received by the server, formatted as "Month Day, Year HH:MM AM/PM".
-            - "email_addresses" (list of str): A list of email addresses, including the recipients and the sender.
-            - "attachment_count" (int): The number of attachments in the email.
+            - "email_addresses" (list of str): A list of email addresses, including the recipients.
+            - "from" (str): The sender's email address.
+            - "to" (str): The primary recipients' email addresses.
+            - "cc" (str): The CC recipients' email addresses.
+            - "bcc" (str): The BCC recipients' email addresses.
+            - "in_reply_to" (str): The email address or message ID that this email is replying to, if any.
             - "subject" (str): The subject of the email.
             - "is_sent" (bool): Whether the email was marked as sent.
+            - "is_read" (bool): Whether the email has been read.
+            - "response_requested" (bool): Whether a response has been requested for the email.
+            - "msg_hash" (str): A unique hash generated for the .msg file for integrity verification.
+
+    Raises:
+        FileNotFoundError: If the specified .msg file path does not exist.
+
+    Example:
+        info = msg_extract_info('/path/to/email.msg')
+        print(info['subject'])
+        print(info['email_addresses'])
     """
     # Load the .msg file
     msg = extract_msg.Message(msg_file_path)
-    
-    # Extract message date
-    msg_date = msg.date
-    readable_msg_date = msg_date.strftime("%B %d, %Y %I:%M %p")
-    
-    # Extract received by server date
-    received_by_server_date = msg.receivedTime
-    readable_received_by_server_date = received_by_server_date.strftime("%B %d, %Y %I:%M %p")
     
     # Extract email addresses
     email_addresses = []
     for rec in msg.recipients:
         email_addresses.append(rec.email)
-    email_addresses.append(msg.sender)
-
-    # Extract subject
-    subject = msg.subject
-
-    # Check if the email was marked as sent
-    is_sent = msg.isSent
 
     # Return all extracted information in a dictionary
     return {
-        "message_date": readable_msg_date,
-        "received_by_server_date": readable_received_by_server_date,
+        "message_date": msg.date.strftime("%B %d, %Y %I:%M %p"),
+        "received_by_server_date": msg.receivedTime.strftime("%B %d, %Y %I:%M %p"),
         "email_addresses": email_addresses,
-        "subject": subject,
-        "is_sent": is_sent, 
+        "from": msg.sender,
+        "to": msg.to,
+        "cc": msg.cc,
+        "bcc": msg.bcc,
+        "in_reply_to": msg.inReplyTo,
+        "subject": msg.subject,
+        "is_sent": msg.isSent,
+        "is_read": msg.isRead, 
+        "response_requested": msg.responseRequested,
         'msg_hash': generate_file_hash(msg_file_path),
     }
+
 
 def msg_extract_attachments(msg_file_path, output_dir, download_base_url):
     """

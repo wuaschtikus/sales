@@ -116,6 +116,14 @@
                     {% endif %}</td>
                 </tr>
                 <tr>
+                    <td>Mail was read</td>
+                    <td>{% if result.result_file_info.is_read %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}</td>
+                </tr>
+                <tr>
                     <td>Date sent</td>
                     <td>{{ result.result_file_info.message_date }}</td>
                 </tr>
@@ -130,6 +138,30 @@
                 <tr>
                     <td>Hash (md5)</td>
                     <td>{{ result.result_file_info.msg_hash }}</td>
+                </tr>
+                <tr>
+                    <td>From</td>
+                    <td>{{ result.result_file_info.from }}</td>
+                </tr>
+                <tr>
+                    <td>To</td>
+                    <td>{{ result.result_file_info.to }}</td>
+                </tr>
+                <tr>
+                    <td>CC</td>
+                    <td>{{ result.result_file_info.cc }}</td>
+                </tr>
+                <tr>
+                    <td>BCC</td>
+                    <td>{{ result.result_file_info.bcc }}</td>
+                </tr>
+                <tr>
+                    <td>In reply to</td>
+                    <td>{{ result.result_file_info.in_reply_to }}</td>
+                </tr>
+                <tr>
+                    <td>Response Requested</td>
+                    <td>{{ result.result_file_info.response_requested }}</td>
                 </tr>
                 <tr>
                     <td>Download</td>
