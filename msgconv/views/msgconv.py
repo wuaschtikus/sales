@@ -128,7 +128,6 @@ class MsgConvMultipleFiles(MsgConvBase):
     template_name = 'msgconv/msgconv_multiple_files.html'
     
     def get(self, request, id=None):
-        print('get')
         form = MultipleFileUploadForm()
         
         if id:

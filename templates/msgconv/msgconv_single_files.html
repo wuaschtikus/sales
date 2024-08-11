@@ -2,6 +2,13 @@
 {% block content %}
 {% include '../base/snippets/navbar.html' %}
 
+<style>
+    .is-disabled {
+        pointer-events: none;
+        color: #7a7a7a; /* Gray color to indicate disabled */
+        cursor: not-allowed;
+    }
+</style>
 
 <div class="tabs is-centered">
     <ul>
@@ -12,10 +19,18 @@
       </a>
       </li>
       <li>
-        <a href="{% url 'msgconv_multiple_files' %}">
-        <span class="icon is-small"><i class="fa fa-box-archive"></i></span>
-        <span>Multiple Files</span>
-      </a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'msgconv_multiple_files' %}"title="You need to be logged in to access this feature">
+                <span class="icon is-small"><i class="fa fa-box-archive" ></i></span>
+                <span>Multiple Files</span>
+            </a>
+        {% else %}  
+            <a href="#" class="is-disabled" title="You need to be logged in to access this feature">
+                <span class="icon is-small"><i class="fa fa-box-archive" style="color:lightgray"></i></span>
+                <span style="color:lightgray">Multiple Files</span>
+                <span class="tag is-small is-primary ml-2">$</span>
+            </a>
+        {% endif %}
       </li>
     </ul>
     <!--/tabs is-centered-->
@@ -42,8 +57,8 @@
                     <span class="file-label"> Choose a file… </span>
                 </span>
                 <span class="file-name" id="file-name">
-                    {% if file_name %}
-                        {{ file_name }}
+                    {% if result.file_name %}
+                        {{ result.file_name }}
                     {% else %}
                         No file selected
                     {% endif %}
