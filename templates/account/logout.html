@@ -2,27 +2,34 @@
 {% load i18n %}
 {% block content %}
 {% include '../base/snippets/navbar.html' %}
-    <section class="ml-2 mr-2">
-        <div class="box">
-            <div class="lg:flex">
-                <div>                                   
-                    <h1 >{% trans "Sign Out" %}</h1>
-                    <p>{% trans 'Are you sure you want to sign out?' %}</p>
-                </div>
-                <div>
-                    <form method="post"  action="{% url 'account_logout' %}">
-                        {% csrf_token %}
-                        {% if redirect_field_value %}
-                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-                        {% endif %}
-                        <div class="mt-8 md:flex md:items-center">
-                            <button type="submit" class="button mt-4">{% trans "Sign Out" %}</button>    
-                        </div>
-                    </form>
-                </div>
-            </div>
 
+<section class="pb-2">
+        <div class="pl-5">
+        <h1 class="title">Sign out</h1>
+    </div>
+</section>
+
+<section class="ml-2 mr-2">
+    <div class="box">
+        <div class="lg:flex">
+            <div class="pb-2">                                   
+                <p>{% trans 'Are you sure you want to sign out?' %}</p>
+            </div>
+            <div>
+                <form method="post"  action="{% url 'account_logout' %}">
+                    {% csrf_token %}
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+                    <div class="mt-8 is-flex is-align-items-center">
+                        <button type="submit" class="button is-danger mr-4">{% trans "Sign Out" %}</button>
+                        <a href="javascript:history.back()" class="button">{% trans "Stay logged in" %}</a>
+                    </div>
+                </form>
+            </div>
         </div>
-    </section>
+
+    </div>
+</section>
 
 {% endblock %}
