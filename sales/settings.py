@@ -205,18 +205,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sales.wsgi.application'
 
-
+print('Debug: ' + str(DEBUG))
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-if DEBUG:
+if DEBUG == True:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
-else:
+    
+else:    
     database_url = dj_database_url.parse(os.environ.get('DATABASE_URL'))
     DATABASES = {
         'default': database_url
