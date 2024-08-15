@@ -52,7 +52,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback_secret_key')
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
-
+print('Django Debug: ' + str(DEBUG))
 # Application definition
 
 INSTALLED_APPS = [
@@ -265,7 +265,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-if DEBUG:
+if DEBUG == True:
     STATIC_URL = '/static/'
 else:
     STATIC_URL = '/static/'
@@ -278,7 +278,6 @@ else:
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    '/var/www/static/',
 ]
 
 # Default primary key field type
