@@ -166,7 +166,7 @@ LOGOUT_REDIRECT_URL = '/'  # Redirect to home page after logout
 
 # ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_USERNAME_REQUIRED = False
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 # ACCOUNT_EMAIL_VERIFICATION = 'optional'
 # ACCOUNT_PASSWORD_MIN_LENGTH = 8
 # ACCOUNT_DEFAULT_HTTP_PROTOCOL='http'
@@ -205,7 +205,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sales.wsgi.application'
 
-print('Debug: ' + str(DEBUG))
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 if DEBUG == True:
