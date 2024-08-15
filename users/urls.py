@@ -23,6 +23,7 @@ from django.views.generic.base import TemplateView
 from .views import ProfileView
 
 urlpatterns = [
+    path('accounts/', TemplateView.as_view(template_name='account/profile.html'), name='user-profile'), # required because if user deletes all social connections we show a back button
     path('profile/', TemplateView.as_view(template_name='account/profile.html'), name='user-profile'),
-    path('accounts/email', ProfileView.as_view(template_name='account/profile.html'), name='user-profile')
+    # path('accounts/email', ProfileView.as_view(template_name='account/profile.html'), name='user-profile')
 ] 

@@ -12,15 +12,16 @@
 {% endfor %} {% endcomment %}
 {% endif %}
 <div class="my-2">
-  <a href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}" class="button">Add a 3rd party Account</a>
+  <a href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}" class="button">
+  <div class="mr-2">
+        <i class="fab fa-{{ provider.name | lower }}"></i>
+    </div>
+    <span class="has-text-grey-dark">Add a party Account {{provider.name}}</span>
+    </a>
   {% comment %} <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
      href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
-     <img 
-      src="
-     {% with 'images/'|add:provider.name|add:'.png' as image %}
-      {% static image %}
-     {% endwith %}
-     " alt="{{ provider.name }}" height="50" width="300"/>
      </a> {% endcomment %}
 </div>
+
+
 {% endfor %}

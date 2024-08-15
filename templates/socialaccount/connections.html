@@ -8,56 +8,72 @@
         <h1 class="title">3rd Party Accounts</h1>
     </div>
 </section>
-<pre>{{  form.accounts }}</pre>
+
 <section class="pl-2 pr-2">
     <div class="box">
         <table class="table">
             <tbody>
-                {% for base_account in form.accounts %}
-                <tr>
-                    <td>
-                        <div class="field-label is-normal">
-                            <label class="label">Social Account</label>
-                        </div>
-                    </td>
-                    <td style="width: 500px;">
-                        <form method="post" action="{% url 'socialaccount_connections' %}">
-                            {% csrf_token %}
-                            <div class="field">
-                                <div class="field-body">
-                                    <div class="field">
-                                        <div class="control">
-                                            {% with base_account.get_provider_account as account %}
-                                                <input class="input" type="text" value="{{ account.get_brand.name }} {{ account }}" disabled>
-                                                <div class="is-size-7 has-text-left">
-                                                    {% if form.non_field_errors %}
-                                                    {{ form.non_field_errors }}
-                                                    {% endif %}
-                                                </div>
-                                            {% endwith %}
+                {% if form.accounts %}
+                    {% for base_account in form.accounts %}
+                    <tr>
+                        <td>
+                            <div class="field-label is-normal">
+                                <label class="label">Social Account</label>
+                            </div>
+                        </td>
+                        <td style="width: 500px;">
+                            
+                                <div class="field">
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <div class="control">
+                                                {% with base_account.get_provider_account as account %}
+                                                    <input class="input" type="text" value="{{ account.get_brand.name }} {{ account }}" disabled>
+                                                    <div class="is-size-7 has-text-left">
+                                                        {% if form.non_field_errors %}
+                                                        {{ form.non_field_errors }}
+                                                        {% endif %}
+                                                    </div>
+                                                {% endwith %}
+                                            </div>
+                                            
                                         </div>
-                                        <input type="hidden" id="id_account_{{ base_account.id }}" name="account" value="{{ base_account.id }}" />
                                     </div>
                                 </div>
+                        </td>
+                        <td>
+                            <div class="field">
+                                <div class="control">
+                                    <form method="post" action="{% url 'socialaccount_connections' %}">
+                                    {% csrf_token %}
+                                        <input type="hidden" id="id_account_{{ base_account.id }}" name="account" value="{{ base_account.id }}" />
+                                        <button type="submit" name="action_remove" class="button is-danger">
+                                            {% trans "Remove" %}
+                                        </button>
+                                    </form>
+
+                                    {% if user.has_usable_password == False %} 
+                                        <a href="{% url 'account_set_password' %}" class="button">
+                                            {% trans "Set Password" %}
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
-                        </form>
-                    </td>
-                    <td>
-                        <div class="field">
-                            <div class="control">
-                                <button type="submit" name="action_remove" class="button is-danger">
-                                    {% trans "Remove" %}
-                                </button>
-                                {% if user.has_usable_password == False %} 
-                                <a href="{% url 'account_set_password' %}" class="button">
-                                    {% trans "Set Password" %}
-                                </a>
-                                {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>
+                            <div class="field-label is-normal">
+                                <label class="label">You have no social accounts connected.</label>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
+                            <div>
+                                <a href="{% url 'user-profile '%}" class="button">Back</a> 
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
             <tbody>
         </table>
     </div>
