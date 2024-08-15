@@ -16,6 +16,5 @@ services:
         fromDatabase:
           name: sales-render
           property: connectionString
-      - key: DEBUG
+      - key: DJANGO_DEBUG
         value: false
-    
