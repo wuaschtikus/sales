@@ -12,10 +12,16 @@
 
 <div class="tabs is-centered">
     <ul>
+        <li class="">
+            <a href="{% url 'msgconv_excel_files' %}">
+                <span class="icon is-small"><i class="fa fa-excel"></i></span>
+                <span>Excel</span>
+            </a>
+      </li>
       <li class="is-active">
         <a href="{% url 'msgconv_single_files' %}">
-        <span class="icon is-small"><i class="fa fa-file"></i></span>
-        <span>Single Files</span>
+            <span class="icon is-small"><i class="fa fa-file"></i></span>
+            <span>Single Files</span>
       </a>
       </li>
       <li>

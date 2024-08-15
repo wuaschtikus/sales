@@ -235,3 +235,12 @@ class MsgConvSingleFiles(MsgConvBase):
         file = request.FILES['file'] 
         return self._process_single_file(request, form, file)
     
+    
+class MsgConvExcelFiles(MsgConvBase):
+    template_name = 'msgconv/msgconv_excel_files.html'
+    
+    def get(self, request, id=None):
+        form = MultipleFileUploadForm()
+        return render(request, self.template_name, {'form': form})
+        
+    

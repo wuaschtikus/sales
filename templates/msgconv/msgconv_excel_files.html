@@ -4,19 +4,19 @@
 
 <div class="tabs is-centered">
     <ul>
-        <li class="">
-            <a href="{% url 'msgconv_excel_files' %}">
-                <span class="icon is-small"><i class="fa fa-excel"></i></span>
-                <span>Excel Files</span>
-            </a>
-        </li>
+    <li class="is-active">
+        <a href="{% url 'msgconv_excel_files' %}">
+            <span class="icon is-small"><i class="fa fa-excel"></i></span>
+            <span>Excel Files</span>
+        </a>
+      </li>
       <li>
         <a href="{% url 'msgconv_single_files' %}">
             <span class="icon is-small"><i class="fa fa-file"></i></span>
             <span>Single Files</span>
-        </a>
+      </a>
       </li>
-      <li class="is-active">
+      <li class="">
         <a href="{% url 'msgconv_multiple_files' %}">
             <span class="icon is-small"><i class="fa fa-box-archive"></i></span>
             <span>Multiple Files</span>
