@@ -1,27 +1,14 @@
 {% load socialaccount %}
 {% load static %}
-
+{% get_social_accounts user as accounts %}
 {% get_providers as socialaccount_providers %}
 {% for provider in socialaccount_providers %}
-
-{% if provider.id == "openid" %}
-{% comment %} {% for brand in provider.get_brands %}
-<div>
-  <a title="{{brand.name}}"  class="socialaccount_provider {{provider.id}} {{brand.id}}"  href="{% provider_login_url provider.id openid=brand.openid_url process=process %}">{{brand.name}}</a>
-</div>
-{% endfor %} {% endcomment %}
-{% endif %}
-<div class="my-2">
-  <a href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}" class="button">
-  <div class="mr-2">
-        <i class="fab fa-{{ provider.name | lower }}"></i>
-    </div>
-    <span class="has-text-grey-dark">Add a party Account {{provider.name}}</span>
-    </a>
-  {% comment %} <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
-     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
-     </a> {% endcomment %}
-</div>
-
-
+  <div class="my-2">
+    <a href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}" class="button">
+    <div class="mr-2">
+          <i class="fab fa-{{ provider.name | lower }}"></i>
+      </div>
+      <span class="has-text-grey-dark">Add a party Account {{provider.name}}</span>
+      </a>
+  </div>
 {% endfor %}

@@ -77,6 +77,34 @@
     </div>
 </section>
 
+<section class="pl-2 pr-2 pt-2"> 
+    <div class="box">
+        <table class="table is-fullwidth">
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                                <label class="label">Add 3rd Party Account</label>
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <div class="control">
+                                        {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <!-- nothing to see here -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
 
 {% comment %} 
     <section class="bg-white dark:bg-gray-900">
