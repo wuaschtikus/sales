@@ -13,4 +13,5 @@ urlpatterns = [
     path('delete/<str:id>', DeleteFiles.as_view(), name='delete_files'),
     path('about/', TemplateView.as_view(template_name='base/about.html'), name='about'),
     path('privacy/', TemplateView.as_view(template_name='base/privacy.html'), name='privacy'),
+    path('subscription/', TemplateView.as_view(template_name='msgconv/subscription.html'), name='subscription'),
 ]
