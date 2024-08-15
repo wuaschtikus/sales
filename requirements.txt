@@ -13,6 +13,7 @@ dj-database-url==2.2.0
 Django==5.0.7
 django-allauth==64.0.0
 django-crispy-forms==2.3
+django-debug-toolbar==4.4.6
 easygui==0.98.3
 ebcdic==1.1.1
 extract-msg==0.48.7

@@ -1,14 +1,19 @@
 {% load socialaccount %}
 {% load static %}
-{% get_social_accounts user as accounts %}
+{% load socialaccount_filters %}
+
 {% get_providers as socialaccount_providers %}
+{% get_social_accounts user as social_accounts %}
+
 {% for provider in socialaccount_providers %}
-  <div class="my-2">
-    <a href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}" class="button">
-    <div class="mr-2">
+  {% if not user|is_connected:provider.id %}
+    <div class="my-2">
+      <a href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}" class="button">
+        <div class="mr-2">
           <i class="fab fa-{{ provider.name | lower }}"></i>
-      </div>
-      <span class="has-text-grey-dark">Add a party Account {{provider.name}}</span>
+        </div>
+        <span class="has-text-grey-dark">Add a Party Account {{ provider.name }}</span>
       </a>
-  </div>
+    </div>
+  {% endif %}
 {% endfor %}

@@ -75,8 +75,14 @@ INSTALLED_APPS = [
     # required for allauth user sessions 
     'django.contrib.humanize',
     'allauth.usersessions',
+    # required by django debug toolbar
+    "debug_toolbar"
 ]
 
+# required by debug toolbar
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -91,6 +97,8 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     # Optional -- needed when: USERSESSIONS_TRACK_ACTIVITY = True
     'allauth.usersessions.middleware.UserSessionsMiddleware',
+    # required by debug toolbar
+     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 # Provider specific settings

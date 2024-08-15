@@ -19,6 +19,7 @@ from django.views.generic import TemplateView
 from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
+from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path('', include('users.urls')),
@@ -29,7 +30,7 @@ urlpatterns = [
     path('msgconv/', include('msgconv.urls')),
     path('accounts/', include('allauth.urls')),     # required by allauth
     path('login/', TemplateView.as_view(template_name='account/login.html'), name='login'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + debug_toolbar_urls()
 
 
 
