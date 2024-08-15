@@ -15,31 +15,30 @@
             <tbody>
                 {% if form.accounts %}
                     {% for base_account in form.accounts %}
+                    {% with base_account.get_provider_account as account %}
                     <tr>
                         <td>
                             <div class="field-label is-normal">
-                                <label class="label">Social Account</label>
+                                <label class="label">Social Account
+                                    <i class="ml-2 fab fa-{{ account.get_brand.name | lower }}"></i>
+                                </label>
                             </div>
                         </td>
                         <td style="width: 500px;">
-                            
-                                <div class="field">
-                                    <div class="field-body">
-                                        <div class="field">
-                                            <div class="control">
-                                                {% with base_account.get_provider_account as account %}
-                                                    <input class="input" type="text" value="{{ account.get_brand.name }} {{ account }}" disabled>
-                                                    <div class="is-size-7 has-text-left">
-                                                        {% if form.non_field_errors %}
-                                                        {{ form.non_field_errors }}
-                                                        {% endif %}
-                                                    </div>
-                                                {% endwith %}
+                            <div class="field">
+                                <div class="field-body">
+                                    <div class="field">
+                                        <div class="control">
+                                            <input class="input" type="text" value="{{ account }}" disabled>
+                                            <div class="is-size-7 has-text-left">
+                                                {% if form.non_field_errors %}
+                                                {{ form.non_field_errors }}
+                                                {% endif %}
                                             </div>
-                                            
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                         </td>
                         <td>
                             <div class="field">
@@ -61,16 +60,15 @@
                             </div>
                         </td>
                     </tr>
+                    {% endwith %}
                     {% endfor %}
                 {% else %}
                     <tr>
                         <td>
                             <div class="field-label is-normal">
-                                <label class="label">You have no social accounts connected.</label>
+                                <label class="">You have no social accounts connected.</label>
                             </div>
-                            <div>
-                                <a href="{% url 'user-profile '%}" class="button">Back</a> 
-                            </div>
+                            <a href="{% url 'user-profile' %}" class="button mt-2">Back</a>
                         </td>
                     </tr>
                 {% endif %}
@@ -78,7 +76,6 @@
         </table>
     </div>
 </section>
-
 
 
 {% comment %} 

@@ -22,12 +22,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('users.urls')),
+    #path('3rdparty/profile/', TemplateView.as_view(template_name='account/profile.html'), name='user-profile'),
     path('', include('msgconv.urls')),
     path('', TemplateView.as_view(template_name='msgconv/index.html'), name='index'),
     path('admin/', admin.site.urls),
     path('msgconv/', include('msgconv.urls')),
-    # required by allauth
-    path('accounts/', include('allauth.urls')),
+    path('accounts/', include('allauth.urls')),     # required by allauth
     path('login/', TemplateView.as_view(template_name='account/login.html'), name='login'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

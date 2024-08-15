@@ -2,8 +2,8 @@
 {% load static %}
 
 {% get_providers as socialaccount_providers %}
-
 {% for provider in socialaccount_providers %}
+
 {% if provider.id == "openid" %}
 {% comment %} {% for brand in provider.get_brands %}
 <div>
