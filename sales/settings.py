@@ -44,6 +44,7 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -63,6 +64,7 @@ INSTALLED_APPS = [
     #'django.contrib.staticfiles', disbaled because it makes trouble in prod. maybe in combination with white noise
     'msgconv',
     'crispy_forms',
+    'crispy_bulma',
     'users',
     'allauth', # required by allauth
     'allauth.account', # required by allauth
@@ -74,6 +76,10 @@ INSTALLED_APPS = [
     'allauth.usersessions', # required for allauth user sessions 
     "debug_toolbar", # required by django debug toolbar
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
+
+CRISPY_TEMPLATE_PACK = "bulma"
 
 # required by debug toolbar
 INTERNAL_IPS = [
