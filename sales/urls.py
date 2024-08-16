@@ -13,27 +13,34 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include, re_path
-from django.views.generic import TemplateView
-from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
-from debug_toolbar.toolbar import debug_toolbar_urls
+from django.contrib import admin
+from django.urls import path, include
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', include('users.urls')),
-    path('', include('msgconv.urls')),
-    path('', TemplateView.as_view(template_name='msgconv/index.html'), name='index'),
-    path('admin/', admin.site.urls),
     path('msgconv/', include('msgconv.urls')),
-    path('accounts/', include('allauth.urls')),     # required by allauth
+    path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),  # required by allauth
     path('login/', TemplateView.as_view(template_name='account/login.html'), name='login'),
-] 
+]
+
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
+    urlpatterns = [
+        path('', TemplateView.as_view(template_name='msgconv/index.html'), name='index'),
+    ] + urlpatterns
+else:
+    urlpatterns = [
+        path('', TemplateView.as_view(template_name='base/under_construction.html'), name='index'),
+    ] + urlpatterns
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += debug_toolbar_urls()
+    import debug_toolbar
+    urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
 
 
 
