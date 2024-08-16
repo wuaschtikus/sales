@@ -60,22 +60,19 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    #'django.contrib.staticfiles', disbaled because it makes trouble in prod. maybe in combination with white noise
     'msgconv',
     'crispy_forms',
     'users',
-    # required by allauth
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
-    'allauth.socialaccount.providers.facebook',
-    # required for allauth user sessions 
-    'django.contrib.humanize',
-    'allauth.usersessions',
-    # required by django debug toolbar
-    "debug_toolbar"
+    'allauth', # required by allauth
+    'allauth.account', # required by allauth
+    'allauth.socialaccount', # required by allauth
+    'allauth.socialaccount.providers.google', # required by allauth
+    'allauth.socialaccount.providers.github', # required by allauth
+    'allauth.socialaccount.providers.facebook', # required by allauth
+    'django.contrib.humanize', # required for allauth user sessions 
+    'allauth.usersessions', # required for allauth user sessions 
+    "debug_toolbar", # required by django debug toolbar
 ]
 
 # required by debug toolbar

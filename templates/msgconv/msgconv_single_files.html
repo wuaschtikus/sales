@@ -1,5 +1,7 @@
 {% extends '../base/base.html' %}
 {% block title %}MSG Converter - Convert msg files{% endblock %}
+{% block description %}Easily convert MSG to EML files online. Batch convert emails to Excel spreadsheets. Fast, secure, and easy-to-use MSG to EML and Excel converter tool.{% endblock %}
+{% block keywords %}Convert MSG to EML, MSG to EML Converter Online, Export Emails to Excel, Batch Convert MSG to EML, Convert Outlook MSG to EML, Convert Emails to Excel, Email to Excel Converter, MSG to Excel{% endblock %}
 {% block content %}
 {% include '../base/snippets/navbar.html' %}
 
@@ -13,12 +15,12 @@
 
 <div class="tabs is-centered">
     <ul>
-        <li class="">
+        {% comment %} <li class="">
             <a href="{% url 'msgconv_excel_files' %}">
                 <span class="icon is-small"><i class="fa fa-excel"></i></span>
                 <span>Excel</span>
             </a>
-      </li>
+      </li> {% endcomment %}
       <li class="is-active">
         <a href="{% url 'msgconv_single_files' %}">
             <span class="icon is-small"><i class="fa fa-file"></i></span>

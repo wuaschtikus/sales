@@ -23,7 +23,6 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path('', include('users.urls')),
-    #path('3rdparty/profile/', TemplateView.as_view(template_name='account/profile.html'), name='user-profile'),
     path('', include('msgconv.urls')),
     path('', TemplateView.as_view(template_name='msgconv/index.html'), name='index'),
     path('admin/', admin.site.urls),
@@ -34,6 +33,7 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += debug_toolbar_urls()
 
 
 
