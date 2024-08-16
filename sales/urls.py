@@ -30,7 +30,10 @@ urlpatterns = [
     path('msgconv/', include('msgconv.urls')),
     path('accounts/', include('allauth.urls')),     # required by allauth
     path('login/', TemplateView.as_view(template_name='account/login.html'), name='login'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + debug_toolbar_urls()
+] 
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 

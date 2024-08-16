@@ -53,7 +53,6 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback_secret_key')
 DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 print('Django Debug: ' + str(DEBUG))
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,7 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    #'django.contrib.staticfiles',
+    'django.contrib.staticfiles',
     'msgconv',
     'crispy_forms',
     'users',
