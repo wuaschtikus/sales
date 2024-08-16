@@ -59,7 +59,7 @@
         <div class="file has-name is-fullwidth">
             <label class="file-label">
                 <input class="file-input" type="file" name="file" id="file-input" accept=".msg"/>
-
+                <input type="text" name="executed" id="executed" value="{{ result.executed }}" hidden/>
                 <span class="file-cta">
                     <span class="file-icon">
                         <i class="fas fa-upload"></i>
@@ -74,6 +74,9 @@
                     {% endif %}
                 </span>
             </label>
+        </div>
+        <div class="is-size-7 has-text-left mb-2">
+            {{ form.file.errors|escape }}
         </div>
         <button type="submit" class="button is-primary">Convert</button>
     </form>

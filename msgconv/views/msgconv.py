@@ -60,7 +60,7 @@ class MsgConvBase(View):
             logger.warning(f'The file {msg_path} does not exist.')
     
     def _process_single_file(self, request, form, uploaded_file):
-        if form.is_valid():
+        if form.is_valid() and not (form.cleaned_data.get('executed') == 'executed'):
             self.uploaded_file = uploaded_file
             self.uploaded_file_size_readable = get_readable_file_size(uploaded_file.size)
             self.uploaded_file_name = uploaded_file.name
@@ -68,7 +68,7 @@ class MsgConvBase(View):
             # Check file size limit
             if self.uploaded_file.size > self.MAX_UPLOAD_SIZE:
                 logger.info('File size exceeded for file ')
-                form.add_error(None, f"File size exceeds the 10MB limit. Your file is {self.uploaded_file_size_readable}.")
+                form.add_error('file', f"File size exceeds the 10MB limit. Your file is {self.uploaded_file_size_readable}.")
                 return render(request, self.template_name, {'form': form})
             
             # Create folder structure
@@ -84,6 +84,7 @@ class MsgConvBase(View):
             result = self._process_file(msg_path, uploaded_file)
             result['result_file_info'] = msg_extract_info(msg_path)
             result['result_file_summaries'] = self._msg_create_summaries(result)
+            result['executed'] = 'executed'
             
             logger.debug(f'result: {pformat(result)}')
             
@@ -179,7 +180,7 @@ class MsgConvMultipleFiles(MsgConvBase):
         return self._process_multiple_files(request, form)
     
     def _process_multiple_files(self, request, form):
-        if form.is_valid():
+        if form.is_valid() and not (form.cleaned_data.get('executed') == 'executed'):
             results = []
             
             # Create folder structure
@@ -187,7 +188,6 @@ class MsgConvMultipleFiles(MsgConvBase):
             self._create_temp_dirs()
             
             for uploaded_file in request.FILES.getlist('file'):
-                print(uploaded_file)
                 # Processing msg file 
                 # Write the file to disk
                 msg_path = self._write_to_disc(uploaded_file, os.path.join(self.tmp_dir_msg, uploaded_file.name))
@@ -196,6 +196,7 @@ class MsgConvMultipleFiles(MsgConvBase):
                 result = self._process_file(msg_path, uploaded_file)
                 result_file_info = msg_extract_info(msg_path)
                 result['result_file_info'] = result_file_info
+                result['executed'] = 'executed'
                 results.append(result)
                 logger.debug(f'result: {pformat(results)}')
                 

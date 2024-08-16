@@ -18,6 +18,8 @@ class MultipleFileField(forms.FileField):
 
 class SingleFileUploadForm(forms.Form):
     file = forms.FileField()
+    executed = forms.TextInput()
 
 class MultipleFileUploadForm(forms.Form):
     file = MultipleFileField()
+    executed = forms.TextInput()
