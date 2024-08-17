@@ -17,4 +17,5 @@ urlpatterns = [
     path('privacy/', TemplateView.as_view(template_name='base/privacy.html'), name='privacy'),
     path('subscription/', TemplateView.as_view(template_name='msgconv/subscription.html'), name='subscription'),
     path('contact/', ContactView.as_view(template_name='base/contact.html'), name='contact'),
+    path('faq/', TemplateView.as_view(template_name='base/faq.html'), name='faq'),
 ]
