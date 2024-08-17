@@ -78,10 +78,12 @@
             const fileInput = document.querySelector('#file-input');
             const fileName = document.querySelector('#file-name');
             const form = document.querySelector('#upload-form');
+            const executed = document.querySelector('#executed');
 
             fileInput.addEventListener('change', () => {
                 if (fileInput.files.length > 0) {
                     fileName.textContent = fileInput.files[0].name;
+                    executed.textContent = 'executed'
                     //form.submit();  // Automatically submit the form when a file is selected
                 }
             });
@@ -111,7 +113,7 @@
     </div>
 
     <div class="pl-5 pr-6 is-flex is-justify-content-space-between is-align-items-center">
-        <h3 class="title">Result</h3>
+        <h3 class="title">Summary</h3>
         <div class="buttons">
             <a href="{{ result.result_file_summaries.txt }}" class="button">
                 <span class="icon"><i class="fas fa-file-alt"></i></span>

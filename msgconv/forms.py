@@ -1,4 +1,12 @@
 from django import forms
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+from django.utils.safestring import mark_safe
+from django.urls import reverse
+import logging
+
+logger = logging.getLogger(__name__)
+
     
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -18,7 +26,36 @@ class MultipleFileField(forms.FileField):
 
 class SingleFileUploadForm(forms.Form):
     file = forms.FileField()
-    executed = forms.TextInput()
+    executed = forms.CharField(
+        widget=forms.TextInput(),
+        required=False  # This makes the field optional
+    )
+
+    MAX_UPLOAD_SIZE = 3 * 1024 * 1024  # 10MB
+
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        if file:
+            if file.size > self.MAX_UPLOAD_SIZE:
+                size_mb = file.size / (1024 * 1024)
+                logger.info(f'File size exceeded for file: {file.name}')
+                features_url = reverse('subscription') 
+                error_message = mark_safe(_(
+                    f"File size exceeds the 3MB limit.<br>"
+                    f"Your file is {size_mb:.2f}MB.<br>"
+                    f'<a href="{features_url}" target="_blank">Enroll in starter-pack</a> to convert bigger files.'
+                ))
+                raise ValidationError(
+                    error_message,
+                    code='file_too_large',
+                )
+        return file
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if 'file' not in cleaned_data and 'file' not in self._errors:
+            raise ValidationError(_("No file was submitted."), code='no_file')
+        return cleaned_data
 
 class MultipleFileUploadForm(forms.Form):
     file = MultipleFileField()

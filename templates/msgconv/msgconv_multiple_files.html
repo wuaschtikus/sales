@@ -87,9 +87,29 @@
 </div>
 
 {% if results %}
+
+<div class="box ml-6 mr-6">
+    <table class="table is-borderless">
+        <tbody>
+            <tr>
+                <td>Download</td>
+                <td>
+                    <a href="{{ eml_download_url }}" class="button">{{ result.file_name_download }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Delete</td>
+                <td><a href="{% url 'delete_files' result.id %}" class="button is-danger">Purge all files</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
 {% for result in results %}
+
     <div class="pl-5">
-        <h3 class="title">Result</h3>
+        <h3 class="title">Summary - {{ result.result_file_info.subject }}</h3>
     </div>
 
     <div class="box ml-6 mr-6">
