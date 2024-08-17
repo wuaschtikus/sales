@@ -31,19 +31,19 @@
 
 
 <div class="pl-5">
-    <h3 class="title">Convert multiple *.msg files to *.eml</h3>
+    <h3 class="title">Convert multiple * files to *.eml</h3>
 </div>
 <div class="box ml-6 mr-6">
     <h1>Upload a Files</h1>
     <form id="upload-form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="field">
-            <label class="label">Convert single .msg file to .eml</label>
+            <label class="label">Convert single  file to .eml</label>
             <p>Convert MSG files, which are commonly used by Microsoft Outlook to store individual email messages, into EML files, a more universal format that is widely supported by various email clients for storing email data in a text-based format.</p>
         </div>
         <div class="file has-name is-fullwidth">
             <label class="file-label">
-                <input class="file-input" type="file" name="file" id="file-input" accept=".msg" multiple/>
+                <input class="file-input" type="file" name="file" id="file-input" accept="" multiple/>
                 <span class="file-cta">
                     <span class="file-icon">
                         <i class="fas fa-upload"></i>
@@ -94,13 +94,13 @@
             <tr>
                 <td>Download</td>
                 <td>
-                    <a href="{{ eml_download_url }}" class="button">{{ result.file_name_download }}</a>
+                    <a href="{{ zip.result_zip_file_download_link }}" class="button">{{ zip.result_zip_file_name }}</a>
                 </td>
             </tr>
             <tr>
                 <td>Delete</td>
-                <td><a href="{% url 'delete_files' result.id %}" class="button is-danger">Purge all files</a></td>
-            </tr>
+                {% comment %} <td><a href="{% url 'delete_files' result.id %}" class="button is-danger">Purge all files</a></td> {% endcomment %}
+            </tr> 
         </tbody>
     </table>
 </div>
@@ -169,7 +169,7 @@
                 </tr>
                 <tr>
                     <td>Hash (md5)</td>
-                    <td>{{ result.result_file_info.msg_hash }}</td>
+                    <td>{{ result.result_file_info_hash }}</td>
                 </tr>
                 <tr>
                     <td>From</td>

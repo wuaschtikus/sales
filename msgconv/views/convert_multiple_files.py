@@ -51,12 +51,19 @@ class MsgConvMultipleFiles(MsgConvBase):
             self.tmp = str(uuid.uuid4())
             self._create_temp_dirs()
             
+            zip = self._zip_attachments()
+            zip_file = {
+                'result_zip_file_download_link': zip,
+                'result_zip_file_name': os.path.basename(zip)
+            }
+                        
             for uploaded_file in request.FILES.getlist('file'):
                 # Processing msg file 
                 # Write the file to disk
                 msg_path = self._write_to_disc(uploaded_file, os.path.join(self.tmp_dir_msg, uploaded_file.name))
                 logger.info(f'Uploaded file {uploaded_file.name} size {get_readable_file_size(uploaded_file.size)} directory {self.tmp_dir}')
                 
+                result = {}
                 result = self._process_file(msg_path, uploaded_file)
                 result_file_info = msg_extract_info(msg_path)
                 result['result_file_info'] = result_file_info
@@ -68,9 +75,16 @@ class MsgConvMultipleFiles(MsgConvBase):
                 # Deletes original msg file 
                 self._cleanup(msg_path)
             
-            # zip all attachments     
-            zip_file = self.create_zip_file(self._get_all_file_paths(self.tmp_dir_attachments), 'zip_filename')
-            
-            return render(request, self.template_name, {'results': results})
+            return render(request, self.template_name, {'results': results, 'zip': zip_file})
         
         return render(request, self.template_name, {'form': form})
+    
+    def _zip_attachments(self):
+        zip_file_name = self._get_current_datetime_for_filename()    
+        zip_file_path = os.path.join(settings.BASE_DIR, 'media', self.tmp, 'attachments', f'{zip_file_name}.zip')
+        zip_file = self._create_zip_file(zip_file_path)
+        zip_download_link = os.path.join(self.tmp_dir_download_attachments, f'{zip_file_name}.zip')
+        
+        logger.debug(f'zip download link: {zip_file}')
+        
+        return zip_download_link

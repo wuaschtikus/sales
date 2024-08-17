@@ -40,22 +40,35 @@ class MsgConvBase(View):
         os.makedirs(os.path.join(self.tmp_dir, 'msg'), exist_ok=True)
         os.makedirs(self.tmp_dir_eml, exist_ok=True)
         
-    def _get_current_datetime_for_filename():
+    def _get_current_datetime_for_filename(self):
         # Get the current date and time
         now = datetime.now()
         # Format the date and time as a string suitable for a filename
         formatted_datetime = now.strftime("%Y%m%d_%H%M%S")
+        formatted_datetime = f'{formatted_datetime}'
         return formatted_datetime
         
-    def _create_zip_file(self, file_paths, zip_filename):
-        zip_file = ContentFile(b"")
-        with zipfile.ZipFile(zip_file, 'w') as zf:
-            for file_path in file_paths:
+    def _create_zip_file(self, zip_filename):
+        # zip all attachments
+        files = self._get_all_file_paths(os.path.join(settings.BASE_DIR, 'media', self.tmp, 'attachments'))
+        
+        logger.debug('produced zip file')
+        
+        # Define the full path where the ZIP file will be saved
+        zip_file_path = f"{zip_filename}"
+        
+        # Open the ZIP file in write mode on disk
+        with zipfile.ZipFile(zip_file_path, 'w') as zf:
+            for file_path in files:
+                # Get the file name from the path
                 file_name = os.path.basename(file_path)
+                # Write the file to the ZIP archive
                 zf.write(file_path, file_name)
-        return zip_file
+        
+        # Return the path to the saved ZIP file
+        return zip_file_path
     
-    def _get_all_file_paths(directory):
+    def _get_all_file_paths(self, directory):
         file_paths = []
         # Walk through the directory
         for root, directories, files in os.walk(directory):
@@ -83,7 +96,11 @@ class MsgConvBase(View):
     def _process_single_file(self, request, form, uploaded_file):
         logger.debug('recieved post request')
         logger.debug(f'recieved form {form}')
-        if form.is_valid() and not (form.cleaned_data.get('executed') == 'executed'):
+        
+        # prevent spamming reload page, fill text field with 'executed'
+        # when file was processed
+        # field gets reset on client if the user chooses another file
+        if form.is_valid() and not (form.cleaned_data.get('executed') == 'executed'): 
             logger.debug('form is valid and field executed was does not contain executed flag')
             self.uploaded_file = form.cleaned_data['file']
             self.uploaded_file = uploaded_file
@@ -105,7 +122,7 @@ class MsgConvBase(View):
             result['result_file_summaries'] = self._msg_create_summaries(result)
             result['executed'] = 'executed'
             
-            logger.debug(f'result: {pformat(result)}')
+            #logger.debug(f'result: {pformat(result)}')
             
             self._cleanup(msg_path)
             
