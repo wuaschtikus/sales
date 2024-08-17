@@ -10,6 +10,16 @@
         pointer-events: none;
         color: #7a7a7a; /* Gray color to indicate disabled */
         cursor: not-allowed;
+    } 
+
+    .tabs ul li.is-active a {
+        color: #00d1b2; /* Active tab color */
+        border-bottom-color: #00d1b2; /* Active tab underline color */
+    }
+
+    .tabs ul li.is-active a:hover {
+        color: #00d1b2; /* Optional: Same color on hover */
+        border-bottom-color: #00d1b2; /* Optional: Same underline color on hover */
     }
 </style>
 
@@ -25,7 +35,7 @@
         <a href="{% url 'msgconv_single_files' %}">
             <span class="icon is-small"><i class="fa fa-file"></i></span>
             <span>Single Files</span>
-      </a>
+        </a>
       </li>
       <li>
         {% if user.is_authenticated %}
