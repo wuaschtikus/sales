@@ -1,6 +1,8 @@
 {% extends '../base/base.html' %}
 {% load static %}
-{% block title %}MSG Converter{% endblock %}
+{% block title %}MSG Converter - Convert MSG Files{% endblock %}
+{% block description %}Welcome to our comprehensive Email Conversion and Analysis Tool! Convert MSG files, extract attachments, reveal hidden metadata, and transform emails into various formats like PDF, DOC, XLS, and more.{% endblock %}
+{% block keywords %}MSG Converter, Email Conversion, Email Analysis, MSG to EML, Extract Email Attachments, Email Metadata, Email Security Analysis, Convert Emails to PDF, Convert Emails to DOC, Convert Emails to XLS, Email Archiving, Microsoft Outlook Emails, Email Hashing, Email Data Extraction, Email Compression, MSG to Excel Conversion{% endblock %}
 {% block content %}
 {% include '../base/snippets/navbar.html' %}
 
@@ -18,7 +20,7 @@
     <div class="columns is-multiline is-centered">
       <div class="column is-8 mb-6 has-text-centered">
         <span class="has-text-grey-dark">Welcome to Our Email Conversion and Analysis Tool</span>
-        <p class="subtitle has-text-grey">hether you're archiving important emails, sharing data across different platforms, or simply exploring the contents of your emails, our tool provides a seamless and intuitive experience.</p>
+        <p class="subtitle has-text-grey">Whether you're archiving important emails, sharing data across different platforms, or simply exploring the contents of your emails, our tool provides a seamless and intuitive experience.</p>
       </div>
     </div>
     <div class="columns is-multiline">
@@ -59,9 +61,9 @@
         <a href="{% url 'msgconv_single_files' %}">
           <div class="box p-6 has-background-light static-height-box">
             <div class="has-text-centered">
-              <i class="fa-solid fa-envelope fa-2xl"></i>
-              <h4 class="mb-2 is-size-5 has-text-weight-bold mt-2">Analyse security features</h4>
-              <p class="has-text-grey">Providing the hash of your email file.</p>
+              <i class="fa-brands fa-microsoft fa-2xl"></i>
+              <h4 class="mb-2 is-size-5 has-text-weight-bold mt-2">Convert emails to multiple file </h4>
+              <p class="has-text-grey">Use MSG Converter to convert your emails to pdf, doc, eml, xls and much more</p>
             </div>
           </div>
         </a>
@@ -71,8 +73,8 @@
           <div class="box p-6 has-background-light static-height-box">
             <div class="has-text-centered">
               <i class="fa-solid fa-envelope fa-2xl"></i>
-              <h4 class="mb-2 is-size-5 has-text-weight-bold mt-2">Analyse security features</h4>
-              <p class="has-text-grey">Providing the hash of your email file.</p>
+              <h4 class="mb-2 is-size-5 has-text-weight-bold mt-2">Compress emails into one single excel file</h4>
+              <p class="has-text-grey">Use excel to to view and edit multiple emails. MSG Converter transforms each mail into a single excel row.</p>
             </div>
           </div>
         </a>

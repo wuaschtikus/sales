@@ -1,0 +1,45 @@
+{% extends '../base/base.html' %}
+{% load static %}
+{% block title %}MSG Converter - Contact Us{% endblock %}
+{% block content %}
+{% include '../base/snippets/navbar.html' %}
+<section class="section">
+  <div class="container">
+    <div class="is-vcentered columns is-multiline">
+      <div class="column is-6 mb-5">
+        <h2 class="mb-5 is-size-1 is-size-3-mobile has-text-weight-bold">Lorem ipsum dolor sit amet consectutar domor at elis</h2>
+        <h4 class="is-size-5 has-text-weight-bold">Address</h4>
+        <p class="has-text-grey-dark mb-5">1686 Geraldine Lane New York, NY 10013</p>
+        <h4 class="is-size-5 has-text-weight-bold">Contact Us</h4>
+        <p class="has-text-grey-dark mb-1">hello@wireframes.org</p>
+        <p class="has-text-grey-dark mb-0">+ 7-843-672-431</p>
+      </div>
+      <div class="column is-5 ml-auto">
+        <form method="post">
+          {% csrf_token %}
+          <div class="field">
+            <div class="control">
+              {{ form.name }}
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              {{ form.email }}
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              {{ form.message }}
+            </div>
+          </div>
+          <button type="submit" class="button is-primary is-fullwidth">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% include 'base/snippets/footer.html' %}
+{% endblock %}

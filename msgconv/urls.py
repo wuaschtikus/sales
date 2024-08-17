@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IndexView, ConverterView, DeleteFiles, MsgConvMultipleFiles, MsgConvSingleFiles, MsgConvExcelFiles
+from .views import IndexView, ConverterView, DeleteFiles, MsgConvMultipleFiles, MsgConvSingleFiles, MsgConvExcelFiles, ContactView
 from django.views.generic.base import TemplateView
 
 urlpatterns = [
@@ -16,4 +16,5 @@ urlpatterns = [
     path('about/', TemplateView.as_view(template_name='base/about.html'), name='about'),
     path('privacy/', TemplateView.as_view(template_name='base/privacy.html'), name='privacy'),
     path('subscription/', TemplateView.as_view(template_name='msgconv/subscription.html'), name='subscription'),
+    path('contact/', ContactView.as_view(template_name='base/contact.html'), name='contact'),
 ]
