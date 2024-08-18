@@ -47,6 +47,12 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
 
+# Recaptcha Settings
+# https://www.google.com/recaptcha/admin/site/707358102
+RECAPTCHA_PUBLIC_KEY=os.getenv('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY=os.getenv('RECAPTCHA_PRIVATE_KEY')
+RECAPTCHA_PROXY = {'http': 'http://127.0.0.1:8000', 'https': 'https://127.0.0.1:8000', 'http': 'localhost', 'https': 'localhost'}
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 CRISPY_TEMPLATE_PACK = "bulma"
@@ -80,6 +86,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize', # required for allauth user sessions 
     'allauth.usersessions', # required for allauth user sessions 
     "debug_toolbar", # required by django debug toolbar
+    "django_recaptcha"
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)

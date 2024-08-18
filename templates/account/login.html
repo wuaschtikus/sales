@@ -8,14 +8,14 @@
 <section class="section has-background-primary">
     <div class="container">
         <div class="columns is-multiline is-centered">
-            <div class="column is-8 is-5-desktop">
+            <div class="column is-8 is-5-desktop has-text-centered">
+            <img class="image" src="{% static 'images/msg_converter_small_white.png' %}" style="display: inline-block;">
                 <div class="box p-6 has-background-light has-text-centered">
                     <span class="has-text-grey-dark">Sign In - MSG Converter</span>
                     <h3 class="mb-5 is-size-4 has-text-weight-bold">Sign in to use our great tools!</h3>
 
                     <form method="post" action="{% url 'account_login' %}">
                         {% csrf_token %}
-
                         <div class="field">
                             <div class="control">
                                 <input class="input" type="email" name="{{ form.login.name }}" id="{{ form.login.id_for_label }}" placeholder="example@gmail.com">
