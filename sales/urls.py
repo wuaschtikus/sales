@@ -47,7 +47,7 @@ if settings.DEBUG:
     
 else:
     urlpatterns = [
-        path('', TemplateView.as_view(template_name='base/under_construction.html'), name='index'),
+        path('', TemplateView.as_view(template_name='base/index.html'), name='index'),
     ] + urlpatterns
 
    
