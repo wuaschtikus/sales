@@ -15,7 +15,10 @@ urlpatterns = [
     path('converter/delete-files/<str:id>', DeleteFiles.as_view(), name='delete_files'),
     path('about/', TemplateView.as_view(template_name='base/about.html'), name='about'),
     path('privacy/', TemplateView.as_view(template_name='base/privacy.html'), name='privacy'),
-    path('subscription/', TemplateView.as_view(template_name='msgconv/subscription.html'), name='subscription'),
     path('contact/', ContactView.as_view(template_name='base/contact.html'), name='contact'),
     path('faq/', TemplateView.as_view(template_name='base/faq.html'), name='faq'),
+    path('subscription/', TemplateView.as_view(template_name='msgconv/subscription.html'), name='subscription'),
+    path('starter/', TemplateView.as_view(template_name='base/enroll.html'), name='enroll-starter'),
+    path('pro/', TemplateView.as_view(template_name='base/enroll.html'), name='enroll-pro'),
+    path('premium/', TemplateView.as_view(template_name='base/enroll.html'), name='enroll-premium'),
 ]
