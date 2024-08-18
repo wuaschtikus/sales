@@ -52,6 +52,9 @@
             <label class="file-label">
                 <input class="file-input" type="file" name="file" id="file-input" accept=".msg" required/>
                 <input type="text" name="executed" id="executed" value="{{ result.executed }}" hidden/>
+                 
+                {{ form.captcha }}
+            
                 <span class="file-cta">
                     <span class="file-icon">
                         <i class="fas fa-upload"></i>

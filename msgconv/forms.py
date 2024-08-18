@@ -32,6 +32,8 @@ class SingleFileUploadForm(forms.Form):
         widget=forms.TextInput(),
         required=False  # This makes the field optional
     )
+    
+    captcha = ReCaptchaField(widget=ReCaptchaV2Invisible)
 
     MAX_UPLOAD_SIZE = 3 * 1024 * 1024  # 10MB
 
@@ -62,6 +64,7 @@ class SingleFileUploadForm(forms.Form):
 class MultipleFileUploadForm(forms.Form):
     file = MultipleFileField()
     executed = forms.TextInput()
+    captcha = ReCaptchaField(widget=ReCaptchaV2Invisible)
     
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
