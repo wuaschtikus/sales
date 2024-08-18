@@ -28,8 +28,8 @@ urlpatterns = [
 ]
 
 # error sites
-handler404 = TemplateView.as_view(template_name='errors/404.html')
-handler500 = TemplateView.as_view(template_name='errors/500.html')
+handler404 = TemplateView.as_view(template_name='error/404.html')
+handler500 = TemplateView.as_view(template_name='error/500.html')
 
 if settings.DEBUG:
     # set index site for webpage
