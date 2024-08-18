@@ -88,6 +88,10 @@
 
 {% if results %}
 
+<div class="pl-5">
+    <h3 class="title">Result</h3>
+</div>
+
 <div class="box ml-6 mr-6">
     <table class="table is-borderless">
         <tbody>
@@ -99,7 +103,7 @@
             </tr>
             <tr>
                 <td>Delete</td>
-                {% comment %} <td><a href="{% url 'delete_files' result.id %}" class="button is-danger">Purge all files</a></td> {% endcomment %}
+                <td><a href="{% url 'delete_files' id %}" class="button is-danger">Purge all files</a></td> 
             </tr> 
         </tbody>
     </table>
@@ -108,8 +112,22 @@
 
 {% for result in results %}
 
-    <div class="pl-5">
+    <div class="pl-6 pr-6 pb-2">
         <h3 class="title">Summary - {{ result.result_file_info.subject }}</h3>
+        <div class="buttons">
+            <a href="{{ result.result_file_summaries.txt }}" class="button">
+                <span class="icon"><i class="fas fa-file-alt"></i></span>
+                <span>Summary.txt</span>
+            </a>
+            <a href="{{ result.result_file_summaries.json }}" class="button pr-2">
+                <span class="icon"><i class="fas fa-file-code"></i></span>
+                <span>Summary.json</span>
+            </a>
+            <a href="{{ result.result_file_summaries.csv }}" class="button pr-2">
+                <span class="icon"><i class="fas fa-file-csv"></i></span>
+                <span>Summary.csv</span>
+            </a>
+        </div>
     </div>
 
     <div class="box ml-6 mr-6">
@@ -197,7 +215,7 @@
                 </tr>
                 <tr>
                     <td>Download</td>
-                    <td><a href="{{ eml_download_url }}" class="button">{{ result.file_name_download }}</a></td>
+                    <td><a href="{{ result.eml_download_url }}" class="button">{{ result.file_name_download }}</a></td>
                 </tr>
                 <tr>
                     <td>Delete</td>

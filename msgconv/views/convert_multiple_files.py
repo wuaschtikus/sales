@@ -63,7 +63,7 @@ class MsgConvMultipleFiles(MsgConvBase):
                 msg_path = self._write_to_disc(uploaded_file, os.path.join(self.tmp_dir_msg, uploaded_file.name))
                 logger.info(f'Uploaded file {uploaded_file.name} size {get_readable_file_size(uploaded_file.size)} directory {self.tmp_dir}')
                 
-                result = {}
+                result = {} 
                 result = self._process_file(msg_path, uploaded_file)
                 result_file_info = msg_extract_info(msg_path)
                 result['result_file_info'] = result_file_info
@@ -75,7 +75,7 @@ class MsgConvMultipleFiles(MsgConvBase):
                 # Deletes original msg file 
                 self._cleanup(msg_path)
             
-            return render(request, self.template_name, {'results': results, 'zip': zip_file})
+            return render(request, self.template_name, {'results': results, 'zip': zip_file, 'id': self.tmp})
         
         return render(request, self.template_name, {'form': form})
     
