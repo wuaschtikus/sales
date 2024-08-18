@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', include('users.urls')),
-    path('msgconv/', include('msgconv.urls')),
+    path('convert/', include('msgconv.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # required by allauth
     path('login/', TemplateView.as_view(template_name='account/login.html'), name='login'),
