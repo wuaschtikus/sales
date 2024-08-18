@@ -1,0 +1,27 @@
+
+
+{% extends '../base/base.html' %}
+{% load static %}
+{% block title %}MSG Converter - 404{% endblock %}
+{% block content %}
+{% include '../base/snippets/navbar.html' %}
+<section class="section">
+  <div class="container">
+    <div class="mb-6 has-text-centered">
+      <span class="has-text-grey-dark">Error 404</span>
+      <h2 class="mt-2 mb-3 is-size-1 is-size-3-mobile has-text-weight-bold">Page not found</h2>
+      <p class="subtitle has-text-grey mb-5">Sorry! We are unable to find the page you are looking for</p>
+      <div class="buttons is-centered"><a class="button is-primary" href="{% url 'index' %}">Go back to Homepage</a>
+    </div>
+    <div class="columns is-multiline is-centered">
+      <div class="column is-8">
+        <img class="image is-fullwidth" src="bulma-plain-assets/images/green-400-horizontal.png" alt="">
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+        {% include 'base/snippets/footer.html' %}
+{% endblock %}

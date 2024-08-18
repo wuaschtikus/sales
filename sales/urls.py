@@ -27,20 +27,30 @@ urlpatterns = [
     path('login/', TemplateView.as_view(template_name='account/login.html'), name='login'),
 ]
 
+# error sites
+handler404 = TemplateView.as_view(template_name='errors/404.html')
+handler500 = TemplateView.as_view(template_name='errors/500.html')
+
 if settings.DEBUG:
+    # set index site for webpage
     urlpatterns = [
         path('', TemplateView.as_view(template_name='msgconv/index.html'), name='index'),
     ] + urlpatterns
+    
+    # required for static assets in debug mode
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    
+    # enables debug toolbar
+    import debug_toolbar
+    urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
+    
 else:
     urlpatterns = [
         path('', TemplateView.as_view(template_name='base/under_construction.html'), name='index'),
     ] + urlpatterns
 
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    import debug_toolbar
-    urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
+   
 
 
 
