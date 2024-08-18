@@ -16,19 +16,30 @@
         <div class="navbar-menu">
             <div class="navbar-start">
                 <a class="navbar-item" href="{% url 'msgconv_single_files' %}">Converter</a>
-                <a class="navbar-item" href="{% url 'subscription' %}">Pricing</a>
-                <a class="navbar-item" href="{% url 'converter' %}">Features</a>
-                <a class="navbar-item" href="{% url 'contact' %}">Contact</a>
-                <a class="navbar-item" href="{% url 'faq' %}">FAQ</a>
+                {% if debug %}
+                    <a class="navbar-item" href="{% url 'subscription' %}">Pricing</a>
+                    <a class="navbar-item" href="{% url 'converter' %}">Features</a>
+                    <a class="navbar-item" href="{% url 'contact' %}">Contact</a>
+                    <a class="navbar-item" href="{% url 'faq' %}">FAQ</a>
+                {% else %}
+                    <a class="navbar-item" href="#">Pricing</a>
+                    <a class="navbar-item" href="#">Features</a>
+                    <a class="navbar-item" href="#">Contact</a>
+                    <a class="navbar-item" href="#">FAQ</a>
+                {% endif %}
             </div>
             <div class="navbar-item">
                 <div class="buttons">
-                    {% if user.is_authenticated %}
-                        <a class="button" href="{% url 'account_logout' %}">Logout {{ user.email }}</a>
-                        <a class="button is-primary" href="{% url 'user-profile' %}">Profile</a>
+                    {% if debug %}
+                        {% if user.is_authenticated %}
+                            <a class="button" href="{% url 'account_logout' %}">Logout {{ user.email }}</a>
+                            <a class="button is-primary" href="{% url 'user-profile' %}">Profile</a>
+                        {% else %}
+                            <a class="button" href="{% url 'account_login' %}">Sign In</a>
+                            <a class="button is-primary" href="{% url 'account_signup' %}">Sign Up</a>
+                        {% endif %}
                     {% else %}
-                        <a class="button" href="{% url 'account_login' %}">Sign In</a>
-                        <a class="button is-primary" href="{% url 'account_signup' %}">Sign Up</a>
+                        <a class="button" href="#">Coming Soon!</a>
                     {% endif %}
                 </div>
             </div>
