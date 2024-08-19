@@ -18,12 +18,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
 from msgconv.views.index import IndexView
 
 urlpatterns = [
     path('', include('users.urls')),
     path('', include('msgconv.urls')),
+    path('ads.txt', RedirectView.as_view(url=staticfiles_storage.url("ads.txt"))),
     path('convert/', include('msgconv.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # required by allauth
