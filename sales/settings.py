@@ -91,7 +91,6 @@ INSTALLED_APPS = [
 if DEBUG:
     INSTALLED_APPS.append('django.contrib.staticfiles') # makes trouble when using in prod
    
-
 CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
 
 CRISPY_TEMPLATE_PACK = "bulma"

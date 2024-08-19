@@ -25,7 +25,7 @@ from msgconv.views.index import IndexView
 urlpatterns = [
     path('', include('users.urls')),
     path('', include('msgconv.urls')),
-    path('ads.txt', RedirectView.as_view(url=staticfiles_storage.url("ads.txt"))),
+    path('ads.txt', RedirectView.as_view(url=staticfiles_storage.url("static/ads.txt"))),
     path('convert/', include('msgconv.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # required by allauth
