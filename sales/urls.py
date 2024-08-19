@@ -22,7 +22,7 @@ from django.views.generic import TemplateView
 from msgconv.views.index import IndexView
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
+    path(r'^$', IndexView.as_view(), name='index'),
     path('', include('users.urls')),
     path('', include('msgconv.urls')),
     path('convert/', include('msgconv.urls')),
