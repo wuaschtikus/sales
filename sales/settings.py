@@ -72,7 +72,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    #'django.contrib.staticfiles', disbaled because it makes trouble in prod. maybe in combination with white noise
     'msgconv',
     'crispy_forms',
     'crispy_bulma',
@@ -88,6 +87,10 @@ INSTALLED_APPS = [
     "debug_toolbar", # required by django debug toolbar
     "django_recaptcha"
 ]
+
+if DEBUG:
+    INSTALLED_APPS.append('django.contrib.staticfiles') # makes trouble when using in prod
+   
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = ("bulma",)
 
