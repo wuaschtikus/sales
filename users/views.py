@@ -3,7 +3,6 @@ from django.views.generic import TemplateView
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
 
-
 class ProfileView(TemplateView):
     template_name = 'account/profile.html'
 
@@ -22,3 +21,5 @@ class ProfileView(TemplateView):
             context['email_verified'] = False  
         
         return context
+
+    

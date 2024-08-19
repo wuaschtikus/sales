@@ -1,0 +1,44 @@
+{% extends '../base/base.html' %}
+{% block title %}MSG Converter - Purge{% endblock %}
+{% block content %}
+{% include '../base/snippets/navbar.html' %}
+
+<section class="pb-2">
+    <div class="pl-5">
+        <h1 class="title">Delete Account</h1>
+    </div>
+</section>
+
+<section>
+    <div class="box ml-6 mr-6">
+        <div class="field">
+            <label class="label">Do you really want to delete your account?</label>
+            <p>If you are making use of our subscription, you can no longer use our premium features.</p>
+        </div>
+        <div>
+            <table class="table is-borderless">
+                <tbody>
+                    {% for file in file_infos %}
+                        <tr>
+                            <td>{{ file.name }}</td>
+                            <td>{{ file.size }}</td>
+                        </tr>
+                    {% endfor %}
+                <tbody>
+            </table>
+            <div class="buttons is-inline-flex">
+                <button onClick="javascript:history.go(-1);" class="button">No, not yet.</button>
+                <form method="post" class="" action="#">
+                    {% csrf_token %}
+                    <button type="submit" class="button is-danger">Yes, delete my account!<button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>    
+
+{% endblock %}
+
+{% block footer %}
+        {% include 'base/snippets/footer.html' %}
+{% endblock %}

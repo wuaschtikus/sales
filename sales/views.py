@@ -1,8 +1,7 @@
 from django.http import HttpResponse
 from django.views import View
-import os
 from django.conf import settings
-
+import os
 
 class AdsTxtView(View):
     def get(self, request, *args, **kwargs):

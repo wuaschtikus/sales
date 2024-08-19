@@ -20,7 +20,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic.base import TemplateView
 
+from users.views.delete_account import DeleteAccountView
+
 urlpatterns = [
     path('profile/', TemplateView.as_view(template_name='account/profile.html'), name='user-profile'),
+    path('delete-account/', DeleteAccountView.as_view(), name='delete-account'),
     # path('accounts/email', ProfileView.as_view(template_name='account/profile.html'), name='user-profile')
 ] 

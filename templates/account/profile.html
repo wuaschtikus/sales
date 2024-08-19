@@ -48,12 +48,13 @@
             <div class="column is-6-tablet">
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                        <label class="label">Password</label>
+                        <label class="label">Account</label>
                     </div>
                     <div class="field-body">
                         <div class="field">
                             <div class="control">
                                 <a href="{% url 'account_reset_password' %}" class="button">Change Password</a>
+                                <a href="{% url 'delete-account' %}" class="button is-danger">Delete Account</a>
                             </div>
                         </div>
                     </div>
@@ -138,7 +139,7 @@
             <div class="column is-6-tablet">
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                        <label class="label">Abo No.</label>
+                        <label class="label">Sub No.</label>
                     </div>
                     <div class="field-body">
                         <div class="field">
@@ -164,6 +165,7 @@
                         <div class="field">
                             <div class="control">
                                 <a href="#" class="button is-danger">Cancel Subscription</a>
+                                <a href="#" class="button">Invoices</a>
                             </div>
                         </div>
                     </div>
