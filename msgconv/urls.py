@@ -3,6 +3,7 @@ from .views import IndexView, ConverterView, DeleteFiles, MsgConvMultipleFiles, 
 from django.views.generic.base import TemplateView
 
 urlpatterns = [
+    path('', IndexView.as_view(), name='index'),
     path('index/', IndexView.as_view(), name='index'),
     path('converter/', ConverterView.as_view(), name='converter'),
     path('converter/single-files', MsgConvSingleFiles.as_view(), name='msgconv_single_files'),
