@@ -22,7 +22,6 @@ from django.views.generic import TemplateView
 from msgconv.views.index import IndexView
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
     path('', include('users.urls')),
     path('', include('msgconv.urls')),
     path('convert/', include('msgconv.urls')),
@@ -51,7 +50,7 @@ if settings.DEBUG:
     
 else:
     urlpatterns = [
-        path('', TemplateView.as_view(template_name='base/index.html'), name='index'),
+        path('', TemplateView.as_view(template_name='msgconv/index.html'), name='index'),
     ] + urlpatterns
 
    
