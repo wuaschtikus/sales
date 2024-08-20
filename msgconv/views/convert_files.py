@@ -127,7 +127,7 @@ class MsgConvBase(View):
             self._cleanup(msg_path)
             
             return render(request, self.template_name, {'result': result})
-        
+        logger.debug(f'Form errors: {form.errors}' )
         logger.debug('Form is not valid')
         return render(request, self.template_name, {'form': form})
     

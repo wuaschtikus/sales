@@ -35,7 +35,7 @@ class SingleFileUploadForm(forms.Form):
     
     captcha = ReCaptchaField(widget=ReCaptchaV2Invisible)
 
-    MAX_UPLOAD_SIZE = 3 * 1024 * 1024  # 10MB
+    MAX_UPLOAD_SIZE = 15 * 1024 * 1024  # 10MB
 
     def clean_file(self):
         file = self.cleaned_data.get('file')
