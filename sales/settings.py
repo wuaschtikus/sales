@@ -51,7 +51,7 @@ EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
 # https://www.google.com/recaptcha/admin/site/707358102
 RECAPTCHA_PUBLIC_KEY=os.getenv('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY=os.getenv('RECAPTCHA_PRIVATE_KEY')
-RECAPTCHA_PROXY = {'http': 'http://127.0.0.1:8000', 'https': 'https://127.0.0.1:8000', 'http': 'localhost', 'https': 'localhost'}
+RECAPTCHA_PROXY = {}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -85,7 +85,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize', # required for allauth user sessions 
     'allauth.usersessions', # required for allauth user sessions 
     "debug_toolbar", # required by django debug toolbar
-    "django_recaptcha"
+    "django_recaptcha",
 ]
 
 if DEBUG:

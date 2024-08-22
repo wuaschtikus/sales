@@ -13,10 +13,9 @@ from pprint import pformat
 from django.conf import settings
 from django.shortcuts import render
 from django.views import View
-from django.core.files.base import ContentFile
 
 from msgconv.core.msgconv import msg_extract_info, msg_extract_attachments, msg_convert_msg_to_eml_with_signed
-
+from msgconv.forms import SingleFileUploadForm, MultipleFileUploadForm
 from sales.common_code import get_readable_file_size
 
 logger = logging.getLogger(__name__)
@@ -95,7 +94,7 @@ class MsgConvBase(View):
     
     def _process_single_file(self, request, form, uploaded_file):
         logger.debug('recieved post request')
-        logger.debug(f'recieved form {form}')
+        #logger.debug(f'recieved form {form}')
         
         # prevent spamming reload page, fill text field with 'executed'
         # when file was processed
