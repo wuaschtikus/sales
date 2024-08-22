@@ -35,20 +35,6 @@
               </div>
               <button type="submit" class="button is-primary">Try for free</button>
           </a>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const fileInput = document.querySelector('#file-input');
-                const fileName = document.querySelector('#file-name');
-                const form = document.querySelector('#upload-form');
-
-                fileInput.addEventListener('change', () => {
-                    if (fileInput.files.length > 0) {
-                        fileName.textContent = fileInput.files[0].name;
-                        //form.submit();  // Automatically submit the form when a file is selected
-                    }
-                });
-            });
-        </script>
         </div>
       </div>
     </div>
