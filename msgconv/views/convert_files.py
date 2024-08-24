@@ -14,8 +14,8 @@ from django.conf import settings
 from django.shortcuts import render
 from django.views import View
 
+from msgconv.models import Processes
 from msgconv.core.msgconv import msg_extract_info, msg_extract_attachments, msg_convert_msg_to_eml_with_signed
-from msgconv.forms import SingleFileUploadForm, MultipleFileUploadForm
 from sales.common_code import get_readable_file_size
 
 logger = logging.getLogger(__name__)
@@ -38,6 +38,10 @@ class MsgConvBase(View):
         os.makedirs(self.tmp_dir_attachments, exist_ok=True)
         os.makedirs(os.path.join(self.tmp_dir, 'msg'), exist_ok=True)
         os.makedirs(self.tmp_dir_eml, exist_ok=True)
+        
+        new_process = Processes(uuid_field=self.tmp)
+        new_process.save()
+        
         
     def _get_current_datetime_for_filename(self):
         # Get the current date and time
@@ -120,12 +124,11 @@ class MsgConvBase(View):
             result['result_file_info'] = msg_extract_info(msg_path)
             result['result_file_summaries'] = self._msg_create_summaries(result)
             result['executed'] = 'executed'
-            
-            #logger.debug(f'result: {pformat(result)}')
-            
+                        
             self._cleanup(msg_path)
             
             return render(request, self.template_name, {'result': result})
+        
         logger.debug(f'Form errors: {form.errors}' )
         logger.debug('Form is not valid')
         return render(request, self.template_name, {'form': form})

@@ -23,7 +23,6 @@ class MsgConvSingleFiles(MsgConvBase):
             # Retrieve the dictionary from disk
             with open(os.path.join(settings.MEDIA_ROOT, id, 'result.pkl'), 'rb') as file:
                 result = pickle.load(file)
-                
                 logger.debug(f'result GET: {pformat(result)}')
                 
             return render(request, self.template_name, {'form': form, 'result': result})
