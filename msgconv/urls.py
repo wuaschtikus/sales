@@ -1,6 +1,16 @@
 from django.urls import path
-from .views import IndexView, ConverterView, DeleteFiles, MsgConvMultipleFiles, MsgConvSingleFiles, ContactView, Subscription
 from django.views.generic.base import TemplateView
+
+from .views import (
+    IndexView, 
+    ConverterView, 
+    DeleteFiles, 
+    MsgConvMultipleFiles, 
+    MsgConvSingleFiles, 
+    ContactView, 
+    Subscription, 
+    SubscriptionSuccess
+)
 
 urlpatterns = [
     path('index/', IndexView.as_view(), name='index'),
@@ -18,7 +28,6 @@ urlpatterns = [
     path('contact/', ContactView.as_view(template_name='base/contact.html'), name='contact'),
     path('faq/', TemplateView.as_view(template_name='base/faq.html'), name='faq'),
     path('subscription/', Subscription.as_view(), name='subscription'),
-    path('starter/', TemplateView.as_view(template_name='base/enroll.html'), name='enroll-starter'),
-    path('pro/', TemplateView.as_view(template_name='base/enroll.html'), name='enroll-pro'),
-    path('premium/', TemplateView.as_view(template_name='base/enroll.html'), name='enroll-premium'),
+    path('subscription-success/', SubscriptionSuccess.as_view(), name='subscription_success'),
+
 ]

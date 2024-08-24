@@ -1,0 +1,29 @@
+{% extends '../base/base.html' %}
+{% load static %}
+{% block title %}MSG Converter - Subscription{% endblock %}
+{% block description %}Sign up for our advanced email converter service and access premium features like batch conversion, email exporting, and more. Upgrade today for a seamless experience.{% endblock %}
+{% block keywords %}Sign Up for Advanced Email Converter, Premium Email Conversion Service, Upgrade to Advanced Email Tools, Email Converter Subscription, Pro Email Converter Subscription, Unlock Premium Email Conversion, Advanced Email Export Features{% endblock %}
+{% block content %}
+{% include '../base/snippets/navbar.html' %}
+
+<section class="section">
+  <div class="container">
+    <div class="mb-5 columns is-multiline is-centered">
+      <div class="column is-8">
+        <img class="image is-fullwidth" src="{% static 'images/sucess_checkout_medium.png' %}" alt="">
+      </div>
+    </div>
+    <div class="has-text-centered">
+      <span class="has-text-grey-dark">Starter</span>
+      <h2 class="mt-2 mb-4 is-size-1 is-size-3-mobile has-text-weight-bold">Success!</h2>
+      <p class="subtitle has-text-grey mb-6">Congratulations! You just enabled advances features of MSG Converter!</p>
+      <div class="buttons is-centered"><a class="button is-primary" href="#">Go back to Homepage</a><a class="button" href="#">Try Again</a></div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block footer %}
+        {% include 'base/snippets/footer.html' %}
+{% endblock %}

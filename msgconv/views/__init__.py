@@ -5,6 +5,7 @@ from msgconv.views.convert_files import MsgConvBase
 from msgconv.views.convert_single_files import MsgConvSingleFiles
 from msgconv.views.convert_multiple_files import MsgConvMultipleFiles
 from msgconv.views.subscription import Subscription
+from msgconv.views.subscription_success import SubscriptionSuccess
 from .contact import ContactView
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     'MsgConvMultipleFiles'
     'ContactView',
     'Subscription',
+    'SubscriptionSuccess',
 ]
