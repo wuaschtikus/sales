@@ -18,8 +18,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.views.generic.base import RedirectView
 
 from sales.views import AdsTxtView
 

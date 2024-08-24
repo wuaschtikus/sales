@@ -2,21 +2,24 @@ import os
 import logging
 import shutil
 
+from django.contrib.messages.views import SuccessMessageMixin
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
-
+from django.contrib import messages
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
+
 from msgconv.models import Processes
 from sales.common_code import list_directory
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-class DeleteFiles(View):
+class DeleteFiles(SuccessMessageMixin, View):
     template_name = 'msgconv/delete_files.html'
+    success_message = 'Files were successfully purged from the server.'
     
     def get(self, request, id=None):
         file_infos = list_directory(os.path.join(settings.MEDIA_ROOT, id))
@@ -27,6 +30,7 @@ class DeleteFiles(View):
         
         if id:
             self._delete(id)
+            messages.success(request, self.success_message)
             return redirect('msgconv_single_files')
         
         return render(request, self.template_name, {'id': id, 'file_infos': file_infos})

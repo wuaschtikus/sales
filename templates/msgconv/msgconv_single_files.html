@@ -37,6 +37,15 @@
     <!--/tabs is-centered-->
   </div>
 
+{% if messages %}
+<div class="notification is-primary ml-6 mr-6">
+    <button class="delete" onclick="this.parentElement.style.display='none'"></button>
+    {% for message in messages %}
+         {{ message }}
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="pl-5">
     <h3 class="title">Convert single *.msg files to *.eml</h3>
 </div>
