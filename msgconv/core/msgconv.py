@@ -6,6 +6,7 @@ from email.message import EmailMessage
 from email import policy
 from email.parser import BytesParser
 from mimetypes import guess_type
+from extract_msg.exceptions import InvalidFileFormatError
 
 from sales.common_code import generate_file_hash
 
@@ -133,33 +134,39 @@ def msg_extract_attachments(msg_file_path, output_dir, download_base_url):
     # Ensure the output directory exists
     os.makedirs(output_dir, exist_ok=True)
 
-    # Load the .msg file
-    msg = extract_msg.Message(msg_file_path)
-    # List to store dictionaries with filename and download path
+    # Initialize the attachments info list
     attachments_info = []
-    
-    # Loop through the attachments in the .msg file
-    for attachment in msg.attachments:
-        # Get the attachment file name
-        attachment_filename = attachment.longFilename if attachment.longFilename else attachment.shortFilename
-        attachment_filepath = os.path.join(output_dir, attachment_filename)
 
-        if attachment.mimetype == 'multipart/signed':
-            attachments_info = msg_extract_signed_attachments(attachment.data, output_dir, download_base_url)
-        else:
-            # Write the attachment to disk
-            with open(attachment_filepath, 'wb') as f:
-                f.write(attachment.data)
-            
-            # Construct the download URL for the attachment
-            download_url = os.path.join(download_base_url, attachment_filename)
-            
-            # Add a dictionary with filename and download path to the list
-            attachments_info.append({
-                'filename': attachment_filename,
-                'download_path': download_url,
-                'signed_attachment': False
-            })
+    try:
+        # Load the .msg file
+        msg = extract_msg.Message(msg_file_path)
+
+        # Loop through the attachments in the .msg file
+        for attachment in msg.attachments:
+            # Get the attachment file name
+            attachment_filename = attachment.longFilename if attachment.longFilename else attachment.shortFilename
+            attachment_filepath = os.path.join(output_dir, attachment_filename)
+
+            if attachment.mimetype == 'multipart/signed':
+                attachments_info = msg_extract_signed_attachments(attachment.data, output_dir, download_base_url)
+            else:
+                # Write the attachment to disk
+                with open(attachment_filepath, 'wb') as f:
+                    f.write(attachment.data)
+                
+                # Construct the download URL for the attachment
+                download_url = os.path.join(download_base_url, attachment_filename)
+                
+                # Add a dictionary with filename and download path to the list
+                attachments_info.append({
+                    'filename': attachment_filename,
+                    'download_path': download_url,
+                    'signed_attachment': False
+                })
+    except InvalidFileFormatError as e:
+        # Log the error and return an empty list or an error message
+        print(f"Error: {e}. The file {msg_file_path} is not a valid .msg file.")
+        # Optionally, handle the error by logging or notifying
 
     return attachments_info
 
