@@ -1,6 +1,6 @@
 
 {% load static %}
-
+{% load admin_urls %}
 <nav class="navbar py-4">
     <div class="container is-fluid">
         <div class="navbar-brand">
@@ -32,8 +32,14 @@
                 <div class="buttons">
                     {% if debug %}
                         {% if user.is_authenticated %}
-                            <a class="button" href="{% url 'account_logout' %}">Logout {{ user.email }}</a>
-                            <a class="button is-primary" href="{% url 'user-profile' %}">Profile</a>
+                            {% if user.is_staff %}
+                                <a class="button" href="{% url 'account_logout' %}">Logout {{ user.username }}</a>
+                                <a class="button" href="{% url 'admin:index' %}">Dashbaord {{ user.email }}</a>
+                                <a class="button is-primary" href="{% url 'user-profile' %}">Profile</a>
+                            {% else %}
+                                <a class="button" href="{% url 'account_logout' %}">Logout {{ user.email }}</a>
+                                <a class="button is-primary" href="{% url 'user-profile' %}">Profile</a>
+                            {% endif %}
                         {% else %}
                             <a class="button" href="{% url 'account_login' %}">Sign In</a>
                             <a class="button is-primary" href="{% url 'account_signup' %}">Sign Up</a>
