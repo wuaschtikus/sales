@@ -71,7 +71,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p class="mb-0">Make additional attributes visible</p>
               </li>
             </ul>
-            <a class="button is-primary is-fullwidth" href="{% url 'enroll-starter'%}?period=monthly">Enroll</a>
+            {% comment %} <form action="{% url 'create-checkout-session' %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" id="checkout-button">Enroll</button>
+            </form> {% endcomment %}
+            <a class="button is-primary is-fullwidth" href="{{ STRIPE_PAYMENT_URL_STARTER_MONTHLY }}">Enroll</a> 
           </div>
         </div>
         <div class="column is-6 is-4-desktop mb-5">
@@ -110,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p class="has-text-white mb-0">Includes Starter file formats</p>
               </li>
             </ul>
-            <a class="button is-light is-fullwidth has-text-centered" href="{% url 'enroll-pro'%}?period=monthly">Enroll</a>
+            <a class="button is-light is-fullwidth has-text-centered" href="{{ STRIPE_PAYMENT_URL_PRO_MONTHLY }}">Enroll</a>
           </div>
         </div>
         <div class="column is-12 is-4-desktop mb-5">
@@ -143,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p class="mb-0">Includes all features of Pro & Starter</p>
               </li>
             </ul>
-            <a class="button is-primary is-fullwidth has-text-centered" href="{% url 'enroll-premium'%}?period=monthly">Enroll</a>
+            <a class="button is-primary is-fullwidth has-text-centered" href="{{ STRIPE_PAYMENT_URL_PREMIUM_MONTHLY }}">Enroll</a>
           </div>
         </div>
       </div>

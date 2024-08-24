@@ -19,6 +19,11 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# General
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback_secret_key')
+DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
     
 # Google OICD
 GOOGLE_AUTH_CLIENT_ID=os.getenv('GOOGLE_AUTH_CLIENT_ID')
@@ -53,6 +58,17 @@ RECAPTCHA_PUBLIC_KEY=os.getenv('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY=os.getenv('RECAPTCHA_PRIVATE_KEY')
 RECAPTCHA_PROXY = {}
 
+# Stripe Checkout 
+if DEBUG:
+    STRIPE_PAYMENT_URL_STARTER_MONTHLY=os.getenv('STRIPE_PAYMENT_URL_STARTER_MONTHLY')
+    STRIPE_PAYMENT_URL_PREMIUM_MONTHLY=os.getenv('STRIPE_PAYMENT_URL_PREMIUM_MONTHLY')
+    STRIPE_PAYMENT_URL_PRO_MONTHLY=os.getenv('STRIPE_PAYMENT_URL_PRO_MONTHLY')
+else:
+    STRIPE_PAYMENT_URL_STARTER_MONTHLY=os.getenv('STRIPE_PAYMENT_URL_STARTER_MONTHLY')
+    STRIPE_PAYMENT_URL_PREMIUM_MONTHLY=os.getenv('STRIPE_PAYMENT_URL_PREMIUM_MONTHLY')
+    STRIPE_PAYMENT_URL_PRO_MONTHLY=os.getenv('STRIPE_PAYMENT_URL_PRO_MONTHLY')
+    
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 CRISPY_TEMPLATE_PACK = "bulma"
@@ -60,10 +76,7 @@ CRISPY_TEMPLATE_PACK = "bulma"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# Additional settings
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback_secret_key')
-DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
+
 print('Django Debug: ' + str(DEBUG))
 
 INSTALLED_APPS = [
